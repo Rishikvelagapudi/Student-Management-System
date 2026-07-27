@@ -6,4 +6,45 @@
 
 body {
   font-family: Arial, Arial, Helvetica, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+header {
+  background-color: #1e3a8a;
+  color: #ffffff;
+}
+
+header h1 {
+  color: #ffffff;
+}
+
+nav a {
+  color: #ffffff;
+  background-color: #2563eb;
+}
+
+nav a:hover {
+  background-color: #1d4ed8;
+}
+
+h2 {
+  color: #1e3a8a;
+}
+
+h3 {
+  color: #2563eb;
+}
+
+p {
+  color: #334155;
+}
+
+footer {
+  background-color: #0f172a;
+  color: #cbd5e1;
+}
+
+footer a {
+  color: #60a5fa;
 }
