@@ -47,3 +47,11 @@ header p {
   color: #e2e8f0;
   margin-bottom: 1rem;
 }
+
+/* Horizontal Rule Styling */
+hr {
+  border: 0;
+  height: 2px;
+  background-color: #e2e8f0;
+  margin: 2rem 0;
+}
