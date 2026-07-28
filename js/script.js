@@ -33,4 +33,25 @@ document.addEventListener("DOMContentLoaded", () => {
       section.style.opacity = "1";
     }, index * 150);
   });
+
+  // 4. Interactive behavior for the #Welcome heading element
+  const welcomeHeading = document.getElementById("Welcome");
+  if (welcomeHeading) {
+    welcomeHeading.style.cursor = "pointer";
+    welcomeHeading.style.transition = "color 0.3s ease, transform 0.2s ease";
+
+    welcomeHeading.addEventListener("mouseover", () => {
+      welcomeHeading.style.color = "#2563eb";
+      welcomeHeading.style.transform = "translateX(5px)";
+    });
+
+    welcomeHeading.addEventListener("mouseout", () => {
+      welcomeHeading.style.color = "";
+      welcomeHeading.style.transform = "translateX(0)";
+    });
+
+    welcomeHeading.addEventListener("click", () => {
+      welcomeHeading.textContent = "Welcome to NRIIT Learning Management System 🚀";
+    });
+  }
 });
