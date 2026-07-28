@@ -1,53 +1,99 @@
-// Test JavaScript file - Arithmetic Operations & Conditional Statements
-console.log("test.js loaded - LMS Calculations & Conditional Checks");
+// ====================================================================
+// NRIIT LMS - Python FullStack Curriculum Logic & Algorithmic Concepts
+// ====================================================================
+console.log("=== NRIIT Python FullStack Programming Logics & Algorithms ===");
 
-// ==========================================
-// 1. ARITHMETIC OPERATIONS (LMS Fee & Score Calculations)
-// ==========================================
+// --------------------------------------------------------------------
+// 1. PYTHON CURRICULUM MODULE TRACKER (Dictionary / Object equivalent)
+// --------------------------------------------------------------------
+// In Python: course_modules = {"Python Core": True, "Flask & Django": True, ...}
+const pythonFullStackModules = [
+  { module: "Python Core & OOPs", completed: true, score: 92 },
+  { module: "Flask & Django REST Framework", completed: true, score: 88 },
+  { module: "SQL, PostgreSQL & SQLAlchemy", completed: true, score: 95 },
+  { module: "HTML, CSS, JavaScript & Bootstrap", completed: true, score: 90 },
+  { module: "Capstone Industry Project", completed: false, score: 0 }
+];
 
-// Course tuition fee calculation
-const baseCourseFee = 15000;
-const enrollmentFee = 1500;
-const studyMaterialCost = 2500;
+const completedModules = pythonFullStackModules.filter(m => m.completed);
+const pendingModules = pythonFullStackModules.filter(m => !m.completed);
 
-// Addition (+) & Subtraction (-)
-const totalBeforeDiscount = baseCourseFee + enrollmentFee + studyMaterialCost;
-const scholarshipDiscount = 3000;
-const finalCourseFee = totalBeforeDiscount - scholarshipDiscount;
+console.log("\n--- Python FullStack Module Progress ---");
+console.log(`Completed Modules (${completedModules.length}):`, completedModules.map(m => m.module));
+console.log(`Pending Modules (${pendingModules.length}):`, pendingModules.map(m => m.module));
 
-// Multiplication (*) & Division (/)
-const monthlyInstallment = finalCourseFee / 3; // 3-month EMI plan
-const totalForGroupOfFive = finalCourseFee * 5;
-
-// Modulus (%) - checking if fee can be split evenly into 4 installments
-const remainderAfterFourInstallments = finalCourseFee % 4;
-
-console.log("=== Course Fee Calculations ===");
-console.log(`Total Before Discount: ₹${totalBeforeDiscount}`);
-console.log(`Final Course Fee (after ₹${scholarshipDiscount} scholarship): ₹${finalCourseFee}`);
-console.log(`3-Month Installment (EMI): ₹${monthlyInstallment.toFixed(2)}`);
-console.log(`Remainder after splitting into 4 installments: ₹${remainderAfterFourInstallments}`);
-
-// Student Marks Arithmetic Calculation
-const assignmentScore = 88;
-const midtermScore = 92;
-const finalExamScore = 85;
-const totalScore = assignmentScore + midtermScore + finalExamScore;
-const averagePercentage = totalScore / 3;
-
-console.log("\n=== Student Grade Calculations ===");
-console.log(`Total Score: ${totalScore}/300`);
-console.log(`Average Percentage: ${averagePercentage.toFixed(2)}%`);
-
-// ==========================================
-// 2. CONDITIONAL STATEMENTS (Admission Eligibility)
-// ==========================================
-
-const age = 18;
-
-console.log("\n=== Admission Eligibility Check ===");
-if (age >= 18) {
-  console.log(`Age ${age}: Eligible for admission in NRIIT Learning Management System.`);
-} else {
-  console.log(`Age ${age}: Not eligible for admission. Minimum age required is 18.`);
+// --------------------------------------------------------------------
+// 2. PALINDROME CHECKER LOGIC (Python String Processing Challenge)
+// --------------------------------------------------------------------
+// In Python: is_palindrome = lambda s: s == s[::-1]
+function isPalindrome(str) {
+  const cleanedStr = str.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const reversedStr = cleanedStr.split("").reverse().join("");
+  return cleanedStr === reversedStr;
 }
+
+const testStrings = ["racecar", "python", "level", "nriit"];
+console.log("\n--- Python Algorithm Challenge: Palindrome Checker ---");
+testStrings.forEach(word => {
+  console.log(`Word "${word}" is Palindrome? -> ${isPalindrome(word) ? "YES" : "NO"}`);
+});
+
+// --------------------------------------------------------------------
+// 3. FIBONACCI SERIES GENERATOR (Python Recursive / Iterative Logic)
+// --------------------------------------------------------------------
+// In Python:
+// def fibonacci(n):
+//     a, b = 0, 1
+//     for _ in range(n):
+//         yield a
+//         a, b = b, a + b
+function generateFibonacci(n) {
+  const series = [];
+  let a = 0, b = 1;
+  for (let i = 0; i < n; i++) {
+    series.push(a);
+    const next = a + b;
+    a = b;
+    b = next;
+  }
+  return series;
+}
+
+console.log("\n--- Python Algorithm Challenge: First 10 Fibonacci Numbers ---");
+console.log(generateFibonacci(10));
+
+// --------------------------------------------------------------------
+// 4. EVEN/ODD FILTER (Python List Comprehension Logic Equivalent)
+// --------------------------------------------------------------------
+// In Python:
+// even_scores = [x for x in marks if x % 2 == 0]
+// odd_scores  = [x for x in marks if x % 2 != 0]
+const studentMarks = [75, 82, 90, 67, 88, 93, 80, 55, 96];
+
+const evenScores = studentMarks.filter(mark => mark % 2 === 0);
+const oddScores = studentMarks.filter(mark => mark % 2 !== 0);
+
+console.log("\n--- Python List Comprehension Style Filtering ---");
+console.log("All Scores:", studentMarks);
+console.log("Even Scores:", evenScores);
+console.log("Odd Scores:", oddScores);
+
+// --------------------------------------------------------------------
+// 5. FACTORIAL CALCULATOR LOGIC
+// --------------------------------------------------------------------
+// In Python:
+// def factorial(n):
+//     return 1 if n <= 1 else n * factorial(n - 1)
+function calculateFactorial(num) {
+  if (num < 0) return -1;
+  if (num === 0 || num === 1) return 1;
+  let result = 1;
+  for (let i = 2; i <= num; i++) {
+    result *= i;
+  }
+  return result;
+}
+
+console.log("\n--- Python Math Logic: Factorial Calculation ---");
+console.log(`Factorial of 5 (5!): ${calculateFactorial(5)}`);
+console.log(`Factorial of 6 (6!): ${calculateFactorial(6)}`);
