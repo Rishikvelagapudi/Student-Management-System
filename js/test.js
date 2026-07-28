@@ -40,36 +40,14 @@ console.log(`Total Score: ${totalScore}/300`);
 console.log(`Average Percentage: ${averagePercentage.toFixed(2)}%`);
 
 // ==========================================
-// 2. CONDITIONAL STATEMENTS
+// 2. CONDITIONAL STATEMENTS (Admission Eligibility)
 // ==========================================
 
-// Grade Evaluation using if / else if / else
-let gradeLetter;
-let scholarshipEligibility = false;
+const age = 18;
 
-if (averagePercentage >= 90) {
-  gradeLetter = "A+ (Excellent)";
-  scholarshipEligibility = true;
-} else if (averagePercentage >= 80) {
-  gradeLetter = "A (Very Good)";
-  scholarshipEligibility = true;
-} else if (averagePercentage >= 70) {
-  gradeLetter = "B (Good)";
-  scholarshipEligibility = false;
-} else if (averagePercentage >= 50) {
-  gradeLetter = "C (Pass)";
-  scholarshipEligibility = false;
+console.log("\n=== Admission Eligibility Check ===");
+if (age >= 18) {
+  console.log(`Age ${age}: Eligible for admission in NRIIT Learning Management System.`);
 } else {
-  gradeLetter = "F (Needs Improvement)";
-  scholarshipEligibility = false;
+  console.log(`Age ${age}: Not eligible for admission. Minimum age required is 18.`);
 }
-
-// Ternary Conditional Operator for Placement Eligibility
-const placementStatus = (averagePercentage >= 75 && gradeLetter !== "F")
-  ? "Eligible for Placement Assistance"
-  : "Complete remedial sessions to qualify for placements";
-
-console.log("=== Student Evaluation Result ===");
-console.log(`Assigned Grade: ${gradeLetter}`);
-console.log(`Scholarship Eligible: ${scholarshipEligibility ? "YES (20% Discount applied)" : "NO"}`);
-console.log(`Placement Status: ${placementStatus}`);
