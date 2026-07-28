@@ -290,3 +290,22 @@ footer a:hover {
   color: #93c5fd;
   text-decoration: underline;
 }
+
+/* Back Button Styling */
+.back-btn {
+  display: inline-block;
+  background-color: #e2e8f0;
+  color: #1e293b;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.back-btn:hover {
+  background-color: #cbd5e1;
+  text-decoration: none;
+  transform: translateX(-3px);
+}
