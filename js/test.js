@@ -62,12 +62,7 @@ function generateFibonacci(n) {
 console.log("\n--- Python Algorithm Challenge: First 10 Fibonacci Numbers ---");
 console.log(generateFibonacci(10));
 
-// --------------------------------------------------------------------
-// 4. EVEN/ODD FILTER (Python List Comprehension Logic Equivalent)
-// --------------------------------------------------------------------
-// In Python:
-// even_scores = [x for x in marks if x % 2 == 0]
-// odd_scores  = [x for x in marks if x % 2 != 0]
+
 const studentMarks = [75, 82, 90, 67, 88, 93, 80, 55, 96];
 
 const evenScores = studentMarks.filter(mark => mark % 2 === 0);
@@ -81,9 +76,7 @@ console.log("Odd Scores:", oddScores);
 // --------------------------------------------------------------------
 // 5. FACTORIAL CALCULATOR LOGIC
 // --------------------------------------------------------------------
-// In Python:
-// def factorial(n):
-//     return 1 if n <= 1 else n * factorial(n - 1)
+
 function calculateFactorial(num) {
   if (num < 0) return -1;
   if (num === 0 || num === 1) return 1;
