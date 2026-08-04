@@ -67,6 +67,16 @@ def serve_image(filename):
 def serve_images(filename):
     return send_from_directory(os.path.join(parent_dir, 'images', 'static'), filename)
 
+@app.route('/audio/static/<path:filename>')
+@app.route('/audio/<path:filename>')
+def serve_audio(filename):
+    return send_from_directory(os.path.join(parent_dir, 'audio', 'static'), filename)
+
+@app.route('/video/static/<path:filename>')
+@app.route('/video/<path:filename>')
+def serve_video(filename):
+    return send_from_directory(os.path.join(parent_dir, 'video', 'static'), filename)
+
 # --- REST API Endpoints ---
 
 registered_users = []

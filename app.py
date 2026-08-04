@@ -47,28 +47,34 @@ def contact():
 # --- Static Resource Handlers ---
 
 @app.route('/css/static/<path:filename>')
-
 @app.route('/css/<path:filename>')
 def serve_css(filename):
     return send_from_directory(os.path.join(base_dir, 'css', 'static'), filename)
 
 @app.route('/js/static/<path:filename>')
-
 @app.route('/js/<path:filename>')
 def serve_js(filename):
     return send_from_directory(os.path.join(base_dir, 'js', 'static'), filename)
 
 @app.route('/image/static/<path:filename>')
-
 @app.route('/image/<path:filename>')
 def serve_image(filename):
     return send_from_directory(os.path.join(base_dir, 'image', 'static'), filename)
 
 @app.route('/images/static/<path:filename>')
-
 @app.route('/images/<path:filename>')
 def serve_images(filename):
     return send_from_directory(os.path.join(base_dir, 'images', 'static'), filename)
+
+@app.route('/audio/static/<path:filename>')
+@app.route('/audio/<path:filename>')
+def serve_audio(filename):
+    return send_from_directory(os.path.join(base_dir, 'audio', 'static'), filename)
+
+@app.route('/video/static/<path:filename>')
+@app.route('/video/<path:filename>')
+def serve_video(filename):
+    return send_from_directory(os.path.join(base_dir, 'video', 'static'), filename)
 
 # --- REST API Endpoints ---
 
