@@ -47,25 +47,25 @@ def contact():
 
 # --- Static Asset Handlers ---
 
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory(os.path.join(parent_dir, 'static'), filename)
-
+@app.route('/css/static/<path:filename>')
 @app.route('/css/<path:filename>')
 def serve_css(filename):
-    return send_from_directory(os.path.join(parent_dir, 'static', 'css'), filename)
+    return send_from_directory(os.path.join(parent_dir, 'css', 'static'), filename)
 
+@app.route('/js/static/<path:filename>')
 @app.route('/js/<path:filename>')
 def serve_js(filename):
-    return send_from_directory(os.path.join(parent_dir, 'static', 'js'), filename)
+    return send_from_directory(os.path.join(parent_dir, 'js', 'static'), filename)
 
+@app.route('/image/static/<path:filename>')
 @app.route('/image/<path:filename>')
 def serve_image(filename):
-    return send_from_directory(os.path.join(parent_dir, 'static', 'image'), filename)
+    return send_from_directory(os.path.join(parent_dir, 'image', 'static'), filename)
 
+@app.route('/images/static/<path:filename>')
 @app.route('/images/<path:filename>')
 def serve_images(filename):
-    return send_from_directory(os.path.join(parent_dir, 'static', 'images'), filename)
+    return send_from_directory(os.path.join(parent_dir, 'images', 'static'), filename)
 
 # --- REST API Endpoints ---
 
