@@ -1,12 +1,11 @@
 import os
 from flask import Flask, render_template, send_from_directory, request, jsonify
 
-# Base directory configuration
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
+# Configure Flask app to locate templates and static assets
+base_dir = os.path.dirname(os.path.abspath(__file__))
+templates_dir = os.path.join(base_dir, 'templates')
 
-# Template folder is current directory, static assets are in parent directory
-app = Flask(__name__, template_folder=current_dir, static_folder=parent_dir)
+app = Flask(__name__, template_folder=templates_dir, static_folder=base_dir)
 
 # --- Web Page Routes ---
 
@@ -45,26 +44,27 @@ def login():
 def contact():
     return render_template('contact.html')
 
-# --- Static Asset Handlers ---
+# --- Static Resource Handlers ---
 
 @app.route('/css/<path:filename>')
 def serve_css(filename):
-    return send_from_directory(os.path.join(parent_dir, 'css'), filename)
+    return send_from_directory(os.path.join(base_dir, 'css'), filename)
 
 @app.route('/js/<path:filename>')
 def serve_js(filename):
-    return send_from_directory(os.path.join(parent_dir, 'js'), filename)
+    return send_from_directory(os.path.join(base_dir, 'js'), filename)
 
 @app.route('/image/<path:filename>')
 def serve_image(filename):
-    return send_from_directory(os.path.join(parent_dir, 'image'), filename)
+    return send_from_directory(os.path.join(base_dir, 'image'), filename)
 
 @app.route('/images/<path:filename>')
 def serve_images(filename):
-    return send_from_directory(os.path.join(parent_dir, 'images'), filename)
+    return send_from_directory(os.path.join(base_dir, 'images'), filename)
 
 # --- REST API Endpoints ---
 
+# In-memory storage for demonstration backend operations
 registered_users = []
 
 @app.route('/api/courses', methods=['GET'])
@@ -136,6 +136,45 @@ def get_stats():
         }
     })
 
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    data = request.get_json(silent=True) or request.form
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
+    course = data.get('course')
+
+    if not email or not password:
+        return jsonify({"success": False, "message": "Email and password are required!"}), 400
+
+    existing = next((u for u in registered_users if u['email'].lower() == email.lower()), None)
+    if existing:
+        return jsonify({"success": False, "message": "Email already registered!"}), 400
+
+    user = {
+        "name": name or "Student",
+        "email": email,
+        "password": password,
+        "course": course or "Python FullStack"
+    }
+    registered_users.append(user)
+    return jsonify({"success": True, "message": f"Registration successful for {user['name']}!", "user": {"name": user['name'], "email": user['email']}})
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.get_json(silent=True) or request.form
+    email = data.get('email')
+    password = data.get('password')
+
+    user = next((u for u in registered_users if u['email'].lower() == (email or '').lower()), None)
+    if not user:
+        return jsonify({"success": False, "message": "User not found!"}), 404
+
+    if user['password'] != password:
+        return jsonify({"success": False, "message": "Invalid credentials!"}), 401
+
+    return jsonify({"success": True, "message": f"Welcome back, {user['name']}!", "user": {"name": user['name'], "email": user['email']}})
+
 if __name__ == '__main__':
-    print("Starting NRIIT Learning Management Flask Server from templates/...")
+    print("Starting NRIIT Learning Management Flask Server...")
     app.run(debug=True, port=5000)
