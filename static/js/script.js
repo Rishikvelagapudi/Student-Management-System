@@ -57,13 +57,13 @@ document.addEventListener("DOMContentLoaded", connectButtons);
 let logoImage = document.getElementById("logoImage");
 function toggleBannerImage() {
   if (!logoImage) return;
-  let currentSrc = logoImage.getAttribute("src");
-  if (currentSrc === "image/logo.png") {
-    logoImage.setAttribute("src", "image/banner.jpg");
+  let currentSrc = logoImage.getAttribute("src") || "";
+  if (currentSrc.includes("logo.png")) {
+    logoImage.setAttribute("src", currentSrc.replace("logo.png", "banner.jpg"));
     logoImage.setAttribute("alt", "NRIIT Banner");
     console.log("Image changed to banner.jpg");
   } else {
-    logoImage.setAttribute("src", "image/logo.png");
+    logoImage.setAttribute("src", currentSrc.replace("banner.jpg", "logo.png"));
     logoImage.setAttribute("alt", "NRIIT Logo");
     console.log("Image changed to logo.png");
   }

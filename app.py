@@ -46,21 +46,25 @@ def contact():
 
 # --- Static Resource Handlers ---
 
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(os.path.join(base_dir, 'static'), filename)
+
 @app.route('/css/<path:filename>')
 def serve_css(filename):
-    return send_from_directory(os.path.join(base_dir, 'css'), filename)
+    return send_from_directory(os.path.join(base_dir, 'static', 'css'), filename)
 
 @app.route('/js/<path:filename>')
 def serve_js(filename):
-    return send_from_directory(os.path.join(base_dir, 'js'), filename)
+    return send_from_directory(os.path.join(base_dir, 'static', 'js'), filename)
 
 @app.route('/image/<path:filename>')
 def serve_image(filename):
-    return send_from_directory(os.path.join(base_dir, 'image'), filename)
+    return send_from_directory(os.path.join(base_dir, 'static', 'image'), filename)
 
 @app.route('/images/<path:filename>')
 def serve_images(filename):
-    return send_from_directory(os.path.join(base_dir, 'images'), filename)
+    return send_from_directory(os.path.join(base_dir, 'static', 'images'), filename)
 
 # --- REST API Endpoints ---
 
