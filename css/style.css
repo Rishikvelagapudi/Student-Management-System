@@ -12,19 +12,19 @@ body {
 }
 
 h1 {
-  color: #1e3a8a;
+  color: #c2410c;
 }
 
 h2 {
-  color: #1d4ed8;
+  color: #ea580c;
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #e2e8f0;
+  border-bottom: 2px solid #fdba74;
   padding-bottom: 0.5rem;
 }
 
 h3 {
-  color: #0369a1;
+  color: #f97316;
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
 }
@@ -35,12 +35,12 @@ p {
 }
 
 a {
-  color: #2563eb;
+  color: #ea580c;
 }
 
 /* Header Styling */
 header {
-  background-color: #1e3a8a;
+  background-color: #ea580c;
   color: #ffffff;
   padding: 2.5rem 1rem;
   text-align: center;
@@ -53,7 +53,7 @@ header h1 {
 }
 
 header p {
-  color: #e2e8f0;
+  color: #fff7ed;
   margin-bottom: 1.25rem;
   font-size: 1.1rem;
 }
@@ -143,11 +143,11 @@ li {
 
 /* Article / Course Cards */
 article {
-  background-color: #f8fafc;
+  background-color: #fffaf5;
   padding: 1.5rem;
   border-radius: 8px;
   margin-top: 1rem;
-  border-left: 5px solid #2563eb;
+  border-left: 5px solid #ea580c;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
@@ -169,13 +169,13 @@ table td {
 }
 
 table th {
-  background-color: #1e3a8a;
+  background-color: #ea580c;
   color: #ffffff;
   font-weight: 600;
 }
 
 table tr:nth-child(even) {
-  background-color: #f8fafc;
+  background-color: #fffaf5;
 }
 
 /* Forms Styling */
@@ -217,8 +217,8 @@ input[type="password"]:focus,
 input[type="date"]:focus,
 select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
 }
 
 input[type="radio"] {
@@ -226,8 +226,10 @@ input[type="radio"] {
   margin-left: 0.6rem;
 }
 
-input[type="submit"] {
-  background-color: #2563eb;
+input[type="submit"],
+button,
+.btn {
+  background-color: #ea580c;
   color: #ffffff;
   border: none;
   padding: 0.85rem 1.75rem;
@@ -235,15 +237,34 @@ input[type="submit"] {
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 1rem;
+  margin: 0.5rem;
+  display: inline-block;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-input[type="submit"]:hover {
-  background-color: #1d4ed8;
+.button-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
 }
 
-input[type="submit"]:active {
+.button-group button,
+.button-group .btn {
+  margin: 0;
+}
+
+input[type="submit"]:hover,
+button:hover,
+.btn:hover {
+  background-color: #c2410c;
+}
+
+input[type="submit"]:active,
+button:active,
+.btn:active {
   transform: scale(0.98);
 }
 
@@ -260,8 +281,8 @@ iframe {
 
 /* Footer Styling */
 footer {
-  background-color: #0f172a;
-  color: #cbd5e1;
+  background-color: #7c2d12;
+  color: #ffedd5;
   text-align: center;
   padding: 2.5rem 1rem;
   margin-top: 4rem;
@@ -270,24 +291,24 @@ footer {
 footer hr {
   border: 0;
   height: 1px;
-  background-color: #334155;
+  background-color: #9a3412;
   margin-bottom: 1.5rem;
 }
 
 footer p {
-  color: #94a3b8;
+  color: #ffedd5;
   margin-bottom: 0.5rem;
 }
 
 footer a {
-  color: #60a5fa;
+  color: #ffffff;
   text-decoration: none;
   margin: 0 0.5rem;
   transition: color 0.2s ease;
 }
 
 footer a:hover {
-  color: #93c5fd;
+  color: #fed7aa;
   text-decoration: underline;
 }
 
