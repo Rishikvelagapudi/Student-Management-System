@@ -5,22 +5,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../css/static/style.css">
-  <title>Home</title>
+  <title>Home - NRIIT LMS</title>
 </head>
 
 <body>
+  <div id="apiNotification"></div>
   <header>
     Home <br />
     <h1>NRIIT Learning Management</h1>
     <p>Learn Practice Get Placed</p>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="courses.html">Courses</a>
-      <a href="trainers.html">Trainers</a>
-      <a href="register.html">Register</a>
-      <a href="login.html">Login</a>
-      <a href="contact.html">Contact</a>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/courses">Courses</a>
+      <a href="/trainers">Trainers</a>
+      <a href="/register">Register</a>
+      <a href="/login">Login</a>
+      <a href="/contact">Contact</a>
     </nav>
   </header>
   <main>
@@ -28,7 +29,7 @@
       <h2 id="Welcome">Welcome to NRIIT Learning Management System</h2>
       <p>
         The NRIIT Management System helps students explore courses, register online, learn from experienced trainers and
-        track their learning journey.
+        track their learning journey connected directly to Flask REST API.
       </p>
       <p id="message">Learning never Stops</p>
       <img id="logoImage" src="../image/static/logo.png" alt="NRIIT Logo" class="banner">
@@ -38,6 +39,31 @@
         <button id="backBtn" class="btn" onclick="restoreHeadingText()">back</button>
       </div>
     </section>
+
+    <!-- Dynamic System Stats loaded via GET /api/stats -->
+    <section>
+      <h2>System Overview <span class="badge badge-get">GET /api/stats</span></h2>
+      <div id="statsContainer" class="stats-grid">
+        <p>Loading real-time stats from Flask backend...</p>
+      </div>
+    </section>
+
+    <!-- Dynamic User Management loaded via GET, PUT, DELETE /api/users -->
+    <section>
+      <h2>Registered Students Directory <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
+      <p>Manage student accounts directly via REST API endpoints:</p>
+      <div id="registeredUsersList">
+        <p>Loading registered users...</p>
+      </div>
+    </section>
+
+    <!-- REST API Method Console Output -->
+    <section>
+      <h2>Live REST API Response Console</h2>
+      <p>Real-time server log for executed HTTP operations (GET, POST, PUT, DELETE):</p>
+      <pre id="apiConsoleOutput" class="api-console">System ready. Perform operations to view live REST API traffic.</pre>
+    </section>
+
     <section>
       <h2>Why choose NRIIT?</h2>
       <ul>
@@ -46,37 +72,18 @@
         <li>Placement Assistance</li>
       </ul>
     </section>
-    <section>
-      <h2>Popular Courses</h2>
-      <article>
-        <h3>Python FullStack</h3>
-        <p>Learn HTML, CSS, JavaScript, SQL and Flask</p>
-      </article>
-    </section>
+
   </main>
   <footer>
-
     <hr>
-
     <p>&copy; 2026 NRIIT Learning Management System</p>
-
-    <p>Email: info@nriit.edu</p>
-
-    <p>Phone: +91 9876543210</p>
-
-    <p>Follow Us:</p>
-
-    <a href="#">Facebook</a> |
-
-    <a href="#">Instagram</a> |
-
-    <a href="#">LinkedIn</a>
-
+    <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
+    <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
   </footer>
-  <script src="../js/static/test.js"></script>
   <script src="../js/static/script.js"></script>
 </body>
 
 </html>
+
 
 

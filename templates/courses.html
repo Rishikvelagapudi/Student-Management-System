@@ -5,71 +5,84 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../css/static/style.css">
-  <title>Course page</title>
+  <title>Courses - NRIIT LMS</title>
 </head>
 
 <body>
+  <div id="apiNotification"></div>
   <header>
     Home <br />
     <h1>Courses in NRIIT Learning Management</h1>
     <p>Learn Practice Get Placed</p>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="courses.html">Courses</a>
-      <a href="trainers.html">Trainers</a>
-      <a href="register.html">Register</a>
-      <a href="login.html">Login</a>
-      <a href="contact.html">Contact</a>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/courses">Courses</a>
+      <a href="/trainers">Trainers</a>
+      <a href="/register">Register</a>
+      <a href="/login">Login</a>
+      <a href="/contact">Contact</a>
     </nav>
   </header>
   <main>
-    <h2>Courses Offered</h2>
-    <table border="|" cellpadding="10">
-      <tr>
-        <th>Course</th>
-        <th>Duration</th>
-        <th>Mode</th>
-      </tr>
-      <tr>
-        <td>Python FullStack</td>
-        <td>6 Months</td>
-        <td>Offline</td>
-      </tr>
-    </table>
+    <section>
+      <h2>Courses Offered <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
+      <p>All courses below are dynamically fetched from the Flask REST API backend (`/api/courses`).</p>
+      
+      <div id="coursesTableContainer">
+        <p>Loading courses from server...</p>
+      </div>
+    </section>
+
+    <!-- Add New Course Form via POST -->
+    <section>
+      <h2>Add New Course <span class="badge badge-post">POST /api/courses</span></h2>
+      <form id="addCourseForm">
+        <label>Course Title</label>
+        <input type="text" id="newCourseTitle" placeholder="e.g. React & Node.js Masterclass" required>
+        
+        <label>Duration</label>
+        <input type="text" id="newCourseDuration" placeholder="e.g. 3 Months" required>
+        
+        <label>Mode of Training</label>
+        <select id="newCourseMode">
+          <option value="Offline & Online">Offline & Online</option>
+          <option value="Online">Online Only</option>
+          <option value="Offline">Offline Only</option>
+        </select>
+        
+        <label>Topics Covered</label>
+        <input type="text" id="newCourseTopics" placeholder="e.g. React, Express, MongoDB, Node.js">
+        
+        <label>Lead Trainer</label>
+        <input type="text" id="newCourseTrainer" placeholder="e.g. Mr. Sriram">
+        
+        <button type="submit" class="btn"><span class="badge badge-post">POST</span> Create Course</button>
+      </form>
+    </section>
+
     <section>
       <h2>Learning Path</h2>
       <ol>
-        <li>HTML</li>
-        <li>CSS</li>
-        <li>JavaScript</li>
-        <li>Flask</li>
-        <li>Database</li>
+        <li>HTML5 & CSS3 Fundamentals</li>
+        <li>JavaScript ES6+ & Async/Await</li>
+        <li>Flask / Backend RESTful APIs</li>
+        <li>SQL & Database Integration</li>
+        <li>FullStack Project Deployment</li>
       </ol>
     </section>
   </main>
   <footer>
-
     <hr>
-
     <p>&copy; 2026 NRIIT Learning Management System</p>
-
-    <p>Email: info@nriit.edu</p>
-
-    <p>Phone: +91 9876543210</p>
-
-    <p>Follow Us:</p>
-
-    <a href="#">Facebook</a> |
-
-    <a href="#">Instagram</a> |
-
-    <a href="#">LinkedIn</a>
-
+    <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
+    <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
   </footer>
+  <script src="../js/static/script.js"></script>
 </body>
 
 </html>
+
 
 
 

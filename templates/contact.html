@@ -5,105 +5,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/static/style.css">
-    <title>Contact Page</title>
+    <title>Contact Us - NRIIT LMS</title>
 </head>
 
 <body>
+    <div id="apiNotification"></div>
     <header>
         Home <br>
         <h1>Contact NRIIT Learning Management</h1>
         <p>Learn Practice Get Placed</p>
         <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="courses.html">Courses</a>
-            <a href="trainers.html">Trainers</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="contact.html">Contact</a>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/courses">Courses</a>
+            <a href="/trainers">Trainers</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+            <a href="/contact">Contact</a>
         </nav>
     </header>
     <main>
-
+        <!-- Contact Form sending data via POST /api/contacts -->
         <section>
+            <h2>Send Us an Inquiry <span class="badge badge-post">POST /api/contacts</span></h2>
+            <form id="contactForm">
+                <label>Your Name</label>
+                <input type="text" id="contactName" placeholder="Enter Your Name" required>
 
-            <h2>Contact Us</h2>
+                <label>Email Address</label>
+                <input type="email" id="contactEmail" placeholder="Enter Your Email" required>
 
-            <p>NRI Institute of Information Technology</p>
+                <label>Your Message / Inquiry</label>
+                <input type="text" id="contactMessage" placeholder="How can we help you?" required>
 
-            <p>Agiripalli, Andhra Pradesh</p>
-
-            <p>Email: info@nriit.edu</p>
-
-            <p>Phone: +91 9876543210</p>
-
+                <button type="submit" class="btn"><span class="badge badge-post">POST</span> Submit Inquiry</button>
+            </form>
         </section>
+
+        <!-- Dynamic Submitted Inquiries List (GET, PUT, DELETE) -->
         <section>
-
-            <h2>Institute Audio</h2>
-
-            <audio controls>
-
-                <source src="../audio/static/intro.mp3" type="audio/mpeg">
-
-            </audio>
-
+            <h2>Submitted Student Inquiries <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
+            <p>Live inquiries fetched from Flask backend (`/api/contacts`):</p>
+            <div id="contactsListContainer">
+                <p>Loading inquiries from server...</p>
+            </div>
         </section>
-        <section>
 
+        <section>
+            <h2>Institute Info</h2>
+            <p><strong>NRI Institute of Information Technology</strong></p>
+            <p>Agiripalli, Krishna District, Andhra Pradesh</p>
+            <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
+        </section>
+
+        <section>
             <h2>Campus Tour</h2>
-
             <video width="500" controls>
-
                 <source src="../video/static/intro.mp4" type="video/mp4">
-
             </video>
-
         </section>
+
         <section>
-
-            <h2>Python Introduction</h2>
-
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/rfscVS0vtbw" title="YouTube video"
-                allowfullscreen>
-
-            </iframe>
-
-        </section>
-        <section>
-
             <h2>Locate Us</h2>
-
-            <iframe src="https://www.google.com/maps?q=Agiripalli&output=embed" width="600" height="350">
-
-            </iframe>
-
+            <iframe src="https://www.google.com/maps?q=Agiripalli&output=embed" width="600" height="350"></iframe>
         </section>
-
     </main>
     <footer>
-
         <hr>
-
         <p>&copy; 2026 NRIIT Learning Management System</p>
-
-        <p>Email: info@nriit.edu</p>
-
-        <p>Phone: +91 9876543210</p>
-
-        <p>Follow Us:</p>
-
-        <a href="#">Facebook</a> |
-
-        <a href="#">Instagram</a> |
-
-        <a href="#">LinkedIn</a>
-
+        <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
+        <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
     </footer>
-
+    <script src="../js/static/script.js"></script>
 </body>
 
 </html>
+
 
 
 
