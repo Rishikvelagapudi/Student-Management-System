@@ -79,7 +79,7 @@ def serve_video(filename):
 
 # --- REST API In-Memory Data Stores ---
 
-registered_users = [
+users_db = [
     {
         "id": 1,
         "name": "Rishik Velagapudi",
@@ -152,14 +152,18 @@ contacts_db = [
     }
 ]
 
-# --- REST API Endpoints ---
+# --- REST API Endpoints (GET, POST, PUT, DELETE) ---
 
+# ==============================================================================
 # 1. COURSES ENDPOINTS (GET, POST, PUT, DELETE)
+# ==============================================================================
 
+# GET Method: Retrieve all courses
 @app.route('/api/courses', methods=['GET'])
 def get_courses():
     return jsonify({"success": True, "method": "GET", "courses": courses_db})
 
+# POST Method: Add a new course
 @app.route('/api/courses', methods=['POST'])
 def add_course():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -184,6 +188,7 @@ def add_course():
     courses_db.append(new_course)
     return jsonify({"success": True, "method": "POST", "message": f"Course '{title}' added successfully!", "course": new_course}), 201
 
+# PUT Method: Update an existing course
 @app.route('/api/courses/<int:course_id>', methods=['PUT'])
 def update_course(course_id):
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -204,6 +209,7 @@ def update_course(course_id):
 
     return jsonify({"success": True, "method": "PUT", "message": f"Course '{course['title']}' updated successfully!", "course": course})
 
+# DELETE Method: Delete a course
 @app.route('/api/courses/<int:course_id>', methods=['DELETE'])
 def delete_course(course_id):
     global courses_db
@@ -215,12 +221,16 @@ def delete_course(course_id):
     return jsonify({"success": True, "method": "DELETE", "message": f"Course ID {course_id} deleted successfully!"})
 
 
+# ==============================================================================
 # 2. TRAINERS ENDPOINTS (GET, POST, PUT, DELETE)
+# ==============================================================================
 
+# GET Method: Retrieve all trainers
 @app.route('/api/trainers', methods=['GET'])
 def get_trainers():
     return jsonify({"success": True, "method": "GET", "trainers": trainers_db})
 
+# POST Method: Add a new trainer
 @app.route('/api/trainers', methods=['POST'])
 def add_trainer():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -243,6 +253,7 @@ def add_trainer():
     trainers_db.append(new_trainer)
     return jsonify({"success": True, "method": "POST", "message": f"Trainer '{name}' added successfully!", "trainer": new_trainer}), 201
 
+# PUT Method: Update a trainer profile
 @app.route('/api/trainers/<int:trainer_id>', methods=['PUT'])
 def update_trainer(trainer_id):
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -261,6 +272,7 @@ def update_trainer(trainer_id):
 
     return jsonify({"success": True, "method": "PUT", "message": f"Trainer '{trainer['name']}' updated successfully!", "trainer": trainer})
 
+# DELETE Method: Remove a trainer
 @app.route('/api/trainers/<int:trainer_id>', methods=['DELETE'])
 def delete_trainer(trainer_id):
     global trainers_db
@@ -272,13 +284,17 @@ def delete_trainer(trainer_id):
     return jsonify({"success": True, "method": "DELETE", "message": f"Trainer '{trainer['name']}' removed successfully!"})
 
 
-# 3. USER MANAGEMENT & AUTH (GET, POST, PUT, DELETE)
+# ==============================================================================
+# 3. USER MANAGEMENT & AUTH ENDPOINTS (GET, POST, PUT, DELETE)
+# ==============================================================================
 
+# GET Method: Retrieve all registered users from users_db
 @app.route('/api/users', methods=['GET'])
 def get_users():
-    clean_users = [{"id": u["id"], "name": u["name"], "email": u["email"], "course": u["course"], "dob": u.get("dob", ""), "gender": u.get("gender", "")} for u in registered_users]
+    clean_users = [{"id": u["id"], "name": u["name"], "email": u["email"], "course": u["course"], "dob": u.get("dob", ""), "gender": u.get("gender", "")} for u in users_db]
     return jsonify({"success": True, "method": "GET", "users": clean_users})
 
+# POST Method: api_register - Register a new user into users_db
 @app.route('/api/register', methods=['POST'])
 def api_register():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -292,11 +308,11 @@ def api_register():
     if not email or not password:
         return jsonify({"success": False, "message": "Email and password are required!"}), 400
 
-    existing = next((u for u in registered_users if u['email'].lower() == email.lower()), None)
+    existing = next((u for u in users_db if u['email'].lower() == email.lower()), None)
     if existing:
         return jsonify({"success": False, "message": "Email already registered!"}), 400
 
-    new_id = max([u['id'] for u in registered_users], default=0) + 1
+    new_id = max([u['id'] for u in users_db], default=0) + 1
     user = {
         "id": new_id,
         "name": name or "Student",
@@ -306,16 +322,17 @@ def api_register():
         "dob": dob,
         "gender": gender
     }
-    registered_users.append(user)
+    users_db.append(user)
     return jsonify({"success": True, "method": "POST", "message": f"Registration successful for {user['name']}!", "user": {"id": user["id"], "name": user['name'], "email": user['email'], "course": user['course']}}), 201
 
+# POST Method: api_login - Authenticate user credentials against users_db
 @app.route('/api/login', methods=['POST'])
 def api_login():
     data = request.get_json(silent=True) or request.form.to_dict()
     email = data.get('email')
     password = data.get('password')
 
-    user = next((u for u in registered_users if u['email'].lower() == (email or '').lower()), None)
+    user = next((u for u in users_db if u['email'].lower() == (email or '').lower()), None)
     if not user:
         return jsonify({"success": False, "message": "User not found! Please register first."}), 404
 
@@ -336,10 +353,11 @@ def api_login():
         }
     })
 
+# PUT Method: Update existing user in users_db
 @app.route('/api/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json(silent=True) or request.form.to_dict()
-    user = next((u for u in registered_users if u['id'] == user_id), None)
+    user = next((u for u in users_db if u['id'] == user_id), None)
     if not user:
         return jsonify({"success": False, "message": "User not found!"}), 404
 
@@ -359,23 +377,28 @@ def update_user(user_id):
         "user": {"id": user["id"], "name": user['name'], "email": user['email'], "course": user['course'], "dob": user.get("dob", "")}
     })
 
+# DELETE Method: Delete user account from users_db
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    global registered_users
-    user = next((u for u in registered_users if u['id'] == user_id), None)
+    global users_db
+    user = next((u for u in users_db if u['id'] == user_id), None)
     if not user:
         return jsonify({"success": False, "message": "User not found!"}), 404
 
-    registered_users = [u for u in registered_users if u['id'] != user_id]
+    users_db = [u for u in users_db if u['id'] != user_id]
     return jsonify({"success": True, "method": "DELETE", "message": f"User account for '{user['name']}' deleted successfully!"})
 
 
+# ==============================================================================
 # 4. CONTACT & INQUIRIES ENDPOINTS (GET, POST, PUT, DELETE)
+# ==============================================================================
 
+# GET Method: Retrieve all inquiries
 @app.route('/api/contacts', methods=['GET'])
 def get_contacts():
     return jsonify({"success": True, "method": "GET", "contacts": contacts_db})
 
+# POST Method: Submit a new inquiry
 @app.route('/api/contacts', methods=['POST'])
 def add_contact():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -397,6 +420,7 @@ def add_contact():
     contacts_db.append(new_contact)
     return jsonify({"success": True, "method": "POST", "message": "Inquiry submitted successfully!", "contact": new_contact}), 201
 
+# PUT Method: Update inquiry status
 @app.route('/api/contacts/<int:contact_id>', methods=['PUT'])
 def update_contact(contact_id):
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -411,6 +435,7 @@ def update_contact(contact_id):
 
     return jsonify({"success": True, "method": "PUT", "message": f"Inquiry ID {contact_id} updated!", "contact": contact})
 
+# DELETE Method: Delete an inquiry
 @app.route('/api/contacts/<int:contact_id>', methods=['DELETE'])
 def delete_contact(contact_id):
     global contacts_db
@@ -422,15 +447,18 @@ def delete_contact(contact_id):
     return jsonify({"success": True, "method": "DELETE", "message": f"Inquiry ID {contact_id} deleted successfully!"})
 
 
+# ==============================================================================
 # 5. GENERAL SYSTEM STATS ENDPOINT (GET)
+# ==============================================================================
 
+# GET Method: System dashboard statistics
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
     return jsonify({
         "success": True,
         "method": "GET",
         "stats": {
-            "students_enrolled": len(registered_users),
+            "students_enrolled": len(users_db),
             "courses_offered": len(courses_db),
             "expert_trainers": len(trainers_db),
             "active_inquiries": len(contacts_db)
