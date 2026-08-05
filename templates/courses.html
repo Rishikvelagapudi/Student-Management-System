@@ -26,17 +26,17 @@
   </header>
   <main>
     <section>
-      <h2>Courses Offered <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
-      <p>All courses below are dynamically fetched from the Flask REST API backend (`/api/courses`).</p>
+      <h2>Courses Offered</h2>
+      <p>All courses below are dynamically fetched from the server.</p>
       
       <div id="coursesTableContainer">
         <p>Loading courses from server...</p>
       </div>
     </section>
 
-    <!-- Add New Course Form via POST -->
+    <!-- Add New Course Form -->
     <section>
-      <h2>Add New Course <span class="badge badge-post">POST /api/courses</span></h2>
+      <h2>Add New Course</h2>
       <form id="addCourseForm">
         <label>Course Title</label>
         <input type="text" id="newCourseTitle" placeholder="e.g. React & Node.js Masterclass" required>
@@ -57,7 +57,7 @@
         <label>Lead Trainer</label>
         <input type="text" id="newCourseTrainer" placeholder="e.g. Mr. Sriram">
         
-        <button type="submit" class="btn"><span class="badge badge-post">POST</span> Create Course</button>
+        <button type="submit" class="btn">Create Course</button>
       </form>
     </section>
 

@@ -25,9 +25,9 @@
         </nav>
     </header>
     <main>
-        <!-- Contact Form sending data via POST /api/contacts -->
+        <!-- Contact Form -->
         <section>
-            <h2>Send Us an Inquiry <span class="badge badge-post">POST /api/contacts</span></h2>
+            <h2>Send Us an Inquiry</h2>
             <form id="contactForm">
                 <label>Your Name</label>
                 <input type="text" id="contactName" placeholder="Enter Your Name" required>
@@ -38,14 +38,14 @@
                 <label>Your Message / Inquiry</label>
                 <input type="text" id="contactMessage" placeholder="How can we help you?" required>
 
-                <button type="submit" class="btn"><span class="badge badge-post">POST</span> Submit Inquiry</button>
+                <button type="submit" class="btn">Submit Inquiry</button>
             </form>
         </section>
 
-        <!-- Dynamic Submitted Inquiries List (GET, PUT, DELETE) -->
+        <!-- Dynamic Submitted Inquiries List -->
         <section>
-            <h2>Submitted Student Inquiries <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
-            <p>Live inquiries fetched from Flask backend (`/api/contacts`):</p>
+            <h2>Submitted Student Inquiries</h2>
+            <p>Live inquiries fetched from server:</p>
             <div id="contactsListContainer">
                 <p>Loading inquiries from server...</p>
             </div>

@@ -49,7 +49,6 @@ function showNotification(message, type = 'success', method = 'INFO') {
 
   alertContainer.innerHTML = `
     <div class="api-alert ${alertClass}">
-      <span class="badge ${badgeClass}">${method}</span>
       <span>${message}</span>
     </div>
   `;
@@ -137,7 +136,7 @@ async function loadRegisteredUsersList() {
               <th>Name</th>
               <th>Email</th>
               <th>Enrolled Course</th>
-              <th>Actions (HTTP Methods)</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -152,10 +151,10 @@ async function loadRegisteredUsersList() {
             <td>${u.course}</td>
             <td>
               <button class="btn btn-sm btn-put" onclick="editUserPrompt(${u.id}, '${u.name}', '${u.course}')">
-                <span class="badge badge-put">PUT</span> Edit
+                Edit
               </button>
               <button class="btn btn-sm btn-delete" onclick="deleteUser(${u.id}, '${u.name}')">
-                <span class="badge badge-delete">DELETE</span> Remove
+                Remove
               </button>
             </td>
           </tr>
@@ -236,7 +235,7 @@ async function loadCourses() {
               <th>Mode</th>
               <th>Topics Covered</th>
               <th>Trainer</th>
-              <th>Actions (HTTP Methods)</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -253,10 +252,10 @@ async function loadCourses() {
             <td>${c.trainer}</td>
             <td>
               <button class="btn btn-sm btn-put" onclick="editCoursePrompt(${c.id}, '${c.title.replace(/'/g, "\\'")}', '${c.duration}', '${c.mode}')">
-                <span class="badge badge-put">PUT</span> Edit
+                Edit
               </button>
               <button class="btn btn-sm btn-delete" onclick="deleteCourse(${c.id}, '${c.title.replace(/'/g, "\\'")}')">
-                <span class="badge badge-delete">DELETE</span> Delete
+                Delete
               </button>
             </td>
           </tr>
@@ -371,16 +370,16 @@ async function loadTrainers() {
         html += `
           <article style="margin-bottom: 1.5rem;">
             <img src="../image/static/logo.png" alt="${t.name}" width="120">
-            <h3>${t.name} <span class="badge badge-get">GET</span></h3>
+            <h3>${t.name}</h3>
             <p><strong>Role:</strong> ${t.role}</p>
             <p><strong>Experience:</strong> ${t.experience}</p>
             <p><strong>Specialization:</strong> ${t.specialization}</p>
             <div style="margin-top: 1rem;">
               <button class="btn btn-sm btn-put" onclick="editTrainerPrompt(${t.id}, '${t.name.replace(/'/g, "\\'")}', '${t.role.replace(/'/g, "\\'")}')">
-                <span class="badge badge-put">PUT</span> Edit Trainer
+                Edit Trainer
               </button>
               <button class="btn btn-sm btn-delete" onclick="deleteTrainer(${t.id}, '${t.name.replace(/'/g, "\\'")}')">
-                <span class="badge badge-delete">DELETE</span> Remove Trainer
+                Remove Trainer
               </button>
             </div>
           </article>
@@ -609,7 +608,7 @@ async function loadContacts() {
               <th>Email</th>
               <th>Message</th>
               <th>Status</th>
-              <th>Actions (HTTP Methods)</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -626,10 +625,10 @@ async function loadContacts() {
             <td><span class="badge ${isResolved ? 'badge-get' : 'badge-put'}">${c.status}</span></td>
             <td>
               <button class="btn btn-sm btn-put" onclick="toggleContactStatus(${c.id}, '${c.status}')">
-                <span class="badge badge-put">PUT</span> ${isResolved ? 'Mark Pending' : 'Mark Resolved'}
+                ${isResolved ? 'Mark Pending' : 'Mark Resolved'}
               </button>
               <button class="btn btn-sm btn-delete" onclick="deleteContact(${c.id})">
-                <span class="badge badge-delete">DELETE</span> Delete
+                Delete
               </button>
             </td>
           </tr>

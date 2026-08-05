@@ -26,16 +26,16 @@
     </header>
     <main>
         <section>
-            <h2>Meet Our Trainers <span class="badge badge-get">GET</span> <span class="badge badge-put">PUT</span> <span class="badge badge-delete">DELETE</span></h2>
-            <p>Faculty list loaded dynamically from Flask backend (`/api/trainers`):</p>
+            <h2>Meet Our Trainers</h2>
+            <p>Faculty list loaded dynamically from server:</p>
             <div id="trainersListContainer">
                 <p>Loading trainers from server...</p>
             </div>
         </section>
 
-        <!-- Add Trainer Form via POST -->
+        <!-- Add Trainer Form -->
         <section>
-            <h2>Add New Trainer <span class="badge badge-post">POST /api/trainers</span></h2>
+            <h2>Add New Trainer</h2>
             <form id="addTrainerForm">
                 <label>Trainer Name</label>
                 <input type="text" id="trainerName" placeholder="e.g. Dr. K. Sharma" required>
@@ -49,7 +49,7 @@
                 <label>Specialization</label>
                 <input type="text" id="trainerSpec" placeholder="e.g. Deep Learning, TensorFlow, Python">
 
-                <button type="submit" class="btn"><span class="badge badge-post">POST</span> Add Trainer</button>
+                <button type="submit" class="btn">Add Trainer</button>
             </form>
         </section>
     </main>
