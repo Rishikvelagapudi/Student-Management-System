@@ -17,9 +17,6 @@ async function apiFetch(endpoint, method = 'GET', data = null) {
   try {
     const response = await fetch(endpoint, options);
     const result = await response.json();
-    
-    // Log API activity to on-screen console if present
-    logToApiConsole(method, endpoint, result);
 
     if (!response.ok) {
       throw new Error(result.message || `HTTP error! Status: ${response.status}`);
@@ -27,7 +24,6 @@ async function apiFetch(endpoint, method = 'GET', data = null) {
     return result;
   } catch (error) {
     console.error(`API Error [${method} ${endpoint}]:`, error);
-    logToApiConsole(method, endpoint, { error: error.message });
     showNotification(`Error: ${error.message}`, 'error', method);
     throw error;
   }
@@ -61,16 +57,6 @@ function showNotification(message, type = 'success', method = 'INFO') {
   setTimeout(() => {
     if (alertContainer) alertContainer.innerHTML = '';
   }, 4000);
-}
-
-// --- Live API Console Output Helper ---
-function logToApiConsole(method, endpoint, data) {
-  const consoleEl = document.getElementById("apiConsoleOutput");
-  if (!consoleEl) return;
-
-  const timestamp = new Date().toLocaleTimeString();
-  const formattedLog = `[${timestamp}] ${method} ${endpoint}\nResponse: ${JSON.stringify(data, null, 2)}\n\n`;
-  consoleEl.textContent = formattedLog + consoleEl.textContent;
 }
 
 // --- Legacy Heading Buttons & Interactivity ---
