@@ -1,11 +1,118 @@
 import os
+import sqlite3
 from flask import Flask, render_template, send_from_directory, request, jsonify
 
 # Configure Flask app to locate templates and static assets
 base_dir = os.path.dirname(os.path.abspath(__file__))
 templates_dir = os.path.join(base_dir, 'templates')
+DB_PATH = os.path.join(base_dir, 'database.db')
 
 app = Flask(__name__, template_folder=templates_dir, static_folder=base_dir)
+
+# --- SQLite Database Helper & Initialization ---
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # 1. Users Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            course TEXT,
+            dob TEXT,
+            gender TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    # 2. Courses Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS courses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            duration TEXT,
+            mode TEXT,
+            topics TEXT,
+            trainer TEXT
+        )
+    ''')
+
+    # 3. Trainers Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS trainers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            role TEXT,
+            experience TEXT,
+            specialization TEXT
+        )
+    ''')
+
+    # 4. Contacts Table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            status TEXT DEFAULT 'Pending'
+        )
+    ''')
+
+    # Seed default user if users table is empty
+    cursor.execute("SELECT COUNT(*) FROM users")
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('''
+            INSERT INTO users (name, email, password, course, dob, gender)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ("Rishik Velagapudi", "rishik@nriit.edu", "123", "Python FullStack", "2002-05-15", "Male"))
+
+    # Seed default courses if empty
+    cursor.execute("SELECT COUNT(*) FROM courses")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany('''
+            INSERT INTO courses (title, duration, mode, topics, trainer)
+            VALUES (?, ?, ?, ?, ?)
+        ''', [
+            ("Python FullStack Development", "6 Months", "Offline & Online", "HTML5, CSS3, JavaScript, Flask, SQL, Git", "Mr. Sriram"),
+            ("Java FullStack Development", "6 Months", "Offline & Online", "Core Java, Spring Boot, REST API, React, PostgreSQL", "Dr. Ramesh"),
+            ("Data Science & AI", "4 Months", "Online", "Python, Pandas, NumPy, Scikit-Learn, Machine Learning", "Ms. Priya")
+        ])
+
+    # Seed default trainers if empty
+    cursor.execute("SELECT COUNT(*) FROM trainers")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany('''
+            INSERT INTO trainers (name, role, experience, specialization)
+            VALUES (?, ?, ?, ?)
+        ''', [
+            ("Mr. Sriram", "Python Full Stack Trainer", "4+ years", "Flask, Django, React, SQL"),
+            ("Dr. Ramesh", "Java Full Stack Lead", "8+ years", "Spring Boot, Microservices, System Design"),
+            ("Ms. Priya", "Data Science Specialist", "5+ years", "Machine Learning, Analytics, Python")
+        ])
+
+    # Seed default contacts if empty
+    cursor.execute("SELECT COUNT(*) FROM contacts")
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('''
+            INSERT INTO contacts (name, email, message, status)
+            VALUES (?, ?, ?, ?)
+        ''', ("Anil Kumar", "anil@gmail.com", "Inquiry regarding Python FullStack batch timings.", "Pending"))
+
+    conn.commit()
+    conn.close()
+
+# Initialize DB on server start
+init_db()
 
 # --- Web Page Routes ---
 
@@ -77,93 +184,19 @@ def serve_audio(filename):
 def serve_video(filename):
     return send_from_directory(os.path.join(base_dir, 'video', 'static'), filename)
 
-# --- REST API In-Memory Data Stores ---
-
-users_db = [
-    {
-        "id": 1,
-        "name": "Rishik Velagapudi",
-        "email": "rishik@nriit.edu",
-        "password": "123",
-        "course": "Python FullStack",
-        "dob": "2002-05-15",
-        "gender": "Male"
-    }
-]
-
-courses_db = [
-    {
-        "id": 1,
-        "title": "Python FullStack Development",
-        "duration": "6 Months",
-        "mode": "Offline & Online",
-        "topics": "HTML5, CSS3, JavaScript, Flask, SQL, Git",
-        "trainer": "Mr. Sriram"
-    },
-    {
-        "id": 2,
-        "title": "Java FullStack Development",
-        "duration": "6 Months",
-        "mode": "Offline & Online",
-        "topics": "Core Java, Spring Boot, REST API, React, PostgreSQL",
-        "trainer": "Dr. Ramesh"
-    },
-    {
-        "id": 3,
-        "title": "Data Science & AI",
-        "duration": "4 Months",
-        "mode": "Online",
-        "topics": "Python, Pandas, NumPy, Scikit-Learn, Machine Learning",
-        "trainer": "Ms. Priya"
-    }
-]
-
-trainers_db = [
-    {
-        "id": 1,
-        "name": "Mr. Sriram",
-        "role": "Python Full Stack Trainer",
-        "experience": "4+ years",
-        "specialization": "Flask, Django, React, SQL"
-    },
-    {
-        "id": 2,
-        "name": "Dr. Ramesh",
-        "role": "Java Full Stack Lead",
-        "experience": "8+ years",
-        "specialization": "Spring Boot, Microservices, System Design"
-    },
-    {
-        "id": 3,
-        "name": "Ms. Priya",
-        "role": "Data Science Specialist",
-        "experience": "5+ years",
-        "specialization": "Machine Learning, Analytics, Python"
-    }
-]
-
-contacts_db = [
-    {
-        "id": 1,
-        "name": "Anil Kumar",
-        "email": "anil@gmail.com",
-        "message": "Inquiry regarding Python FullStack batch timings.",
-        "status": "Pending"
-    }
-]
-
 # --- REST API Endpoints (GET, POST, PUT, DELETE) ---
 
 # ==============================================================================
-# 1. COURSES ENDPOINTS (GET, POST, PUT, DELETE)
+# 1. COURSES ENDPOINTS
 # ==============================================================================
 
-# GET Method: Retrieve all courses
 @app.route('/api/courses', methods=['GET'])
 def get_courses():
-    return jsonify({"success": True, "method": "GET", "courses": courses_db})
+    conn = get_db_connection()
+    courses = conn.execute("SELECT * FROM courses").fetchall()
+    conn.close()
+    return jsonify({"success": True, "method": "GET", "courses": [dict(c) for c in courses]})
 
-# POST Method: Add a new course
 @app.route('/api/courses', methods=['POST'])
 def add_course():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -176,61 +209,69 @@ def add_course():
     if not title:
         return jsonify({"success": False, "message": "Course title is required!"}), 400
 
-    new_id = max([c['id'] for c in courses_db], default=0) + 1
-    new_course = {
-        "id": new_id,
-        "title": title,
-        "duration": duration,
-        "mode": mode,
-        "topics": topics,
-        "trainer": trainer
-    }
-    courses_db.append(new_course)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO courses (title, duration, mode, topics, trainer)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (title, duration, mode, topics, trainer))
+    new_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+
+    new_course = {"id": new_id, "title": title, "duration": duration, "mode": mode, "topics": topics, "trainer": trainer}
     return jsonify({"success": True, "method": "POST", "message": f"Course '{title}' added successfully!", "course": new_course}), 201
 
-# PUT Method: Update an existing course
 @app.route('/api/courses/<int:course_id>', methods=['PUT'])
 def update_course(course_id):
     data = request.get_json(silent=True) or request.form.to_dict()
-    course = next((c for c in courses_db if c['id'] == course_id), None)
+    conn = get_db_connection()
+    course = conn.execute("SELECT * FROM courses WHERE id = ?", (course_id,)).fetchone()
     if not course:
+        conn.close()
         return jsonify({"success": False, "message": "Course not found!"}), 404
 
-    if 'title' in data and data['title']:
-        course['title'] = data['title']
-    if 'duration' in data and data['duration']:
-        course['duration'] = data['duration']
-    if 'mode' in data and data['mode']:
-        course['mode'] = data['mode']
-    if 'topics' in data and data['topics']:
-        course['topics'] = data['topics']
-    if 'trainer' in data and data['trainer']:
-        course['trainer'] = data['trainer']
+    title = data.get('title', course['title'])
+    duration = data.get('duration', course['duration'])
+    mode = data.get('mode', course['mode'])
+    topics = data.get('topics', course['topics'])
+    trainer = data.get('trainer', course['trainer'])
 
-    return jsonify({"success": True, "method": "PUT", "message": f"Course '{course['title']}' updated successfully!", "course": course})
+    conn.execute('''
+        UPDATE courses SET title = ?, duration = ?, mode = ?, topics = ?, trainer = ?
+        WHERE id = ?
+    ''', (title, duration, mode, topics, trainer, course_id))
+    conn.commit()
+    conn.close()
 
-# DELETE Method: Delete a course
+    updated = {"id": course_id, "title": title, "duration": duration, "mode": mode, "topics": topics, "trainer": trainer}
+    return jsonify({"success": True, "method": "PUT", "message": f"Course '{title}' updated successfully!", "course": updated})
+
 @app.route('/api/courses/<int:course_id>', methods=['DELETE'])
 def delete_course(course_id):
-    global courses_db
-    course = next((c for c in courses_db if c['id'] == course_id), None)
+    conn = get_db_connection()
+    course = conn.execute("SELECT * FROM courses WHERE id = ?", (course_id,)).fetchone()
     if not course:
+        conn.close()
         return jsonify({"success": False, "message": "Course not found!"}), 404
 
-    courses_db = [c for c in courses_db if c['id'] != course_id]
+    conn.execute("DELETE FROM courses WHERE id = ?", (course_id,))
+    conn.commit()
+    conn.close()
     return jsonify({"success": True, "method": "DELETE", "message": f"Course ID {course_id} deleted successfully!"})
 
 
 # ==============================================================================
-# 2. TRAINERS ENDPOINTS (GET, POST, PUT, DELETE)
+# 2. TRAINERS ENDPOINTS
 # ==============================================================================
 
-# GET Method: Retrieve all trainers
 @app.route('/api/trainers', methods=['GET'])
 def get_trainers():
-    return jsonify({"success": True, "method": "GET", "trainers": trainers_db})
+    conn = get_db_connection()
+    trainers = conn.execute("SELECT * FROM trainers").fetchall()
+    conn.close()
+    return jsonify({"success": True, "method": "GET", "trainers": [dict(t) for t in trainers]})
 
-# POST Method: Add a new trainer
 @app.route('/api/trainers', methods=['POST'])
 def add_trainer():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -242,59 +283,69 @@ def add_trainer():
     if not name:
         return jsonify({"success": False, "message": "Trainer name is required!"}), 400
 
-    new_id = max([t['id'] for t in trainers_db], default=0) + 1
-    new_trainer = {
-        "id": new_id,
-        "name": name,
-        "role": role,
-        "experience": experience,
-        "specialization": specialization
-    }
-    trainers_db.append(new_trainer)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO trainers (name, role, experience, specialization)
+        VALUES (?, ?, ?, ?)
+    ''', (name, role, experience, specialization))
+    new_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+
+    new_trainer = {"id": new_id, "name": name, "role": role, "experience": experience, "specialization": specialization}
     return jsonify({"success": True, "method": "POST", "message": f"Trainer '{name}' added successfully!", "trainer": new_trainer}), 201
 
-# PUT Method: Update a trainer profile
 @app.route('/api/trainers/<int:trainer_id>', methods=['PUT'])
 def update_trainer(trainer_id):
     data = request.get_json(silent=True) or request.form.to_dict()
-    trainer = next((t for t in trainers_db if t['id'] == trainer_id), None)
+    conn = get_db_connection()
+    trainer = conn.execute("SELECT * FROM trainers WHERE id = ?", (trainer_id,)).fetchone()
     if not trainer:
+        conn.close()
         return jsonify({"success": False, "message": "Trainer not found!"}), 404
 
-    if 'name' in data and data['name']:
-        trainer['name'] = data['name']
-    if 'role' in data and data['role']:
-        trainer['role'] = data['role']
-    if 'experience' in data and data['experience']:
-        trainer['experience'] = data['experience']
-    if 'specialization' in data and data['specialization']:
-        trainer['specialization'] = data['specialization']
+    name = data.get('name', trainer['name'])
+    role = data.get('role', trainer['role'])
+    experience = data.get('experience', trainer['experience'])
+    specialization = data.get('specialization', trainer['specialization'])
 
-    return jsonify({"success": True, "method": "PUT", "message": f"Trainer '{trainer['name']}' updated successfully!", "trainer": trainer})
+    conn.execute('''
+        UPDATE trainers SET name = ?, role = ?, experience = ?, specialization = ?
+        WHERE id = ?
+    ''', (name, role, experience, specialization, trainer_id))
+    conn.commit()
+    conn.close()
 
-# DELETE Method: Remove a trainer
+    updated = {"id": trainer_id, "name": name, "role": role, "experience": experience, "specialization": specialization}
+    return jsonify({"success": True, "method": "PUT", "message": f"Trainer '{name}' updated successfully!", "trainer": updated})
+
 @app.route('/api/trainers/<int:trainer_id>', methods=['DELETE'])
 def delete_trainer(trainer_id):
-    global trainers_db
-    trainer = next((t for t in trainers_db if t['id'] == trainer_id), None)
+    conn = get_db_connection()
+    trainer = conn.execute("SELECT * FROM trainers WHERE id = ?", (trainer_id,)).fetchone()
     if not trainer:
+        conn.close()
         return jsonify({"success": False, "message": "Trainer not found!"}), 404
 
-    trainers_db = [t for t in trainers_db if t['id'] != trainer_id]
-    return jsonify({"success": True, "method": "DELETE", "message": f"Trainer '{trainer['name']}' removed successfully!"})
+    name = trainer['name']
+    conn.execute("DELETE FROM trainers WHERE id = ?", (trainer_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True, "method": "DELETE", "message": f"Trainer '{name}' removed successfully!"})
 
 
 # ==============================================================================
-# 3. USER MANAGEMENT & AUTH ENDPOINTS (GET, POST, PUT, DELETE)
+# 3. USER MANAGEMENT & AUTH ENDPOINTS (SQLite DB Persisted)
 # ==============================================================================
 
-# GET Method: Retrieve all registered users from users_db
 @app.route('/api/users', methods=['GET'])
 def get_users():
-    clean_users = [{"id": u["id"], "name": u["name"], "email": u["email"], "course": u["course"], "dob": u.get("dob", ""), "gender": u.get("gender", "")} for u in users_db]
-    return jsonify({"success": True, "method": "GET", "users": clean_users})
+    conn = get_db_connection()
+    users = conn.execute("SELECT id, name, email, course, dob, gender, created_at FROM users").fetchall()
+    conn.close()
+    return jsonify({"success": True, "method": "GET", "users": [dict(u) for u in users]})
 
-# POST Method: api_register - Register a new user into users_db
 @app.route('/api/register', methods=['POST'])
 def api_register():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -308,31 +359,51 @@ def api_register():
     if not email or not password:
         return jsonify({"success": False, "message": "Email and password are required!"}), 400
 
-    existing = next((u for u in users_db if u['email'].lower() == email.lower()), None)
+    conn = get_db_connection()
+    existing = conn.execute("SELECT id FROM users WHERE LOWER(email) = LOWER(?)", (email,)).fetchone()
     if existing:
+        conn.close()
         return jsonify({"success": False, "message": "Email already registered!"}), 400
 
-    new_id = max([u['id'] for u in users_db], default=0) + 1
-    user = {
-        "id": new_id,
-        "name": name or "Student",
-        "email": email,
-        "password": password,
-        "course": course or "Python FullStack",
-        "dob": dob,
-        "gender": gender
-    }
-    users_db.append(user)
-    return jsonify({"success": True, "method": "POST", "message": f"Registration successful for {user['name']}!", "user": {"id": user["id"], "name": user['name'], "email": user['email'], "course": user['course']}}), 201
+    user_name = name or "Student"
+    user_course = course or "Python FullStack"
 
-# POST Method: api_login - Authenticate user credentials against users_db
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO users (name, email, password, course, dob, gender)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (user_name, email, password, user_course, dob, gender))
+    new_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "method": "POST",
+        "message": f"Registration successful for {user_name}!",
+        "user": {
+            "id": new_id,
+            "name": user_name,
+            "email": email,
+            "course": user_course,
+            "dob": dob,
+            "gender": gender
+        }
+    }), 201
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     data = request.get_json(silent=True) or request.form.to_dict()
     email = data.get('email')
     password = data.get('password')
 
-    user = next((u for u in users_db if u['email'].lower() == (email or '').lower()), None)
+    if not email or not password:
+        return jsonify({"success": False, "message": "Email and password are required!"}), 400
+
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE LOWER(email) = LOWER(?)", (email,)).fetchone()
+    conn.close()
+
     if not user:
         return jsonify({"success": False, "message": "User not found! Please register first."}), 404
 
@@ -348,57 +419,65 @@ def api_login():
             "name": user['name'],
             "email": user['email'],
             "course": user['course'],
-            "dob": user.get('dob', ''),
-            "gender": user.get('gender', '')
+            "dob": user['dob'] or '',
+            "gender": user['gender'] or ''
         }
     })
 
-# PUT Method: Update existing user in users_db
 @app.route('/api/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.get_json(silent=True) or request.form.to_dict()
-    user = next((u for u in users_db if u['id'] == user_id), None)
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     if not user:
+        conn.close()
         return jsonify({"success": False, "message": "User not found!"}), 404
 
-    if 'name' in data and data['name']:
-        user['name'] = data['name']
-    if 'course' in data and data['course']:
-        user['course'] = data['course']
-    if 'password' in data and data['password']:
-        user['password'] = data['password']
-    if 'dob' in data:
-        user['dob'] = data['dob']
+    name = data.get('name', user['name'])
+    course = data.get('course', user['course'])
+    password = data.get('password', user['password'])
+    dob = data.get('dob', user['dob'])
+
+    conn.execute('''
+        UPDATE users SET name = ?, course = ?, password = ?, dob = ?
+        WHERE id = ?
+    ''', (name, course, password, dob, user_id))
+    conn.commit()
+    conn.close()
 
     return jsonify({
         "success": True,
         "method": "PUT",
-        "message": f"Profile updated for {user['name']}!",
-        "user": {"id": user["id"], "name": user['name'], "email": user['email'], "course": user['course'], "dob": user.get("dob", "")}
+        "message": f"Profile updated for {name}!",
+        "user": {"id": user_id, "name": name, "email": user['email'], "course": course, "dob": dob}
     })
 
-# DELETE Method: Delete user account from users_db
 @app.route('/api/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    global users_db
-    user = next((u for u in users_db if u['id'] == user_id), None)
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
     if not user:
+        conn.close()
         return jsonify({"success": False, "message": "User not found!"}), 404
 
-    users_db = [u for u in users_db if u['id'] != user_id]
-    return jsonify({"success": True, "method": "DELETE", "message": f"User account for '{user['name']}' deleted successfully!"})
+    user_name = user['name']
+    conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True, "method": "DELETE", "message": f"User account for '{user_name}' deleted successfully!"})
 
 
 # ==============================================================================
-# 4. CONTACT & INQUIRIES ENDPOINTS (GET, POST, PUT, DELETE)
+# 4. CONTACT & INQUIRIES ENDPOINTS
 # ==============================================================================
 
-# GET Method: Retrieve all inquiries
 @app.route('/api/contacts', methods=['GET'])
 def get_contacts():
-    return jsonify({"success": True, "method": "GET", "contacts": contacts_db})
+    conn = get_db_connection()
+    contacts = conn.execute("SELECT * FROM contacts").fetchall()
+    conn.close()
+    return jsonify({"success": True, "method": "GET", "contacts": [dict(c) for c in contacts]})
 
-# POST Method: Submit a new inquiry
 @app.route('/api/contacts', methods=['POST'])
 def add_contact():
     data = request.get_json(silent=True) or request.form.to_dict()
@@ -409,63 +488,78 @@ def add_contact():
     if not name or not email or not message:
         return jsonify({"success": False, "message": "Name, Email, and Message are required!"}), 400
 
-    new_id = max([c['id'] for c in contacts_db], default=0) + 1
-    new_contact = {
-        "id": new_id,
-        "name": name,
-        "email": email,
-        "message": message,
-        "status": "Pending"
-    }
-    contacts_db.append(new_contact)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO contacts (name, email, message, status)
+        VALUES (?, ?, ?, 'Pending')
+    ''', (name, email, message))
+    new_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+
+    new_contact = {"id": new_id, "name": name, "email": email, "message": message, "status": "Pending"}
     return jsonify({"success": True, "method": "POST", "message": "Inquiry submitted successfully!", "contact": new_contact}), 201
 
-# PUT Method: Update inquiry status
 @app.route('/api/contacts/<int:contact_id>', methods=['PUT'])
 def update_contact(contact_id):
     data = request.get_json(silent=True) or request.form.to_dict()
-    contact = next((c for c in contacts_db if c['id'] == contact_id), None)
+    conn = get_db_connection()
+    contact = conn.execute("SELECT * FROM contacts WHERE id = ?", (contact_id,)).fetchone()
     if not contact:
+        conn.close()
         return jsonify({"success": False, "message": "Inquiry not found!"}), 404
 
-    if 'status' in data:
-        contact['status'] = data['status']
-    if 'message' in data and data['message']:
-        contact['message'] = data['message']
+    status = data.get('status', contact['status'])
+    message = data.get('message', contact['message'])
 
-    return jsonify({"success": True, "method": "PUT", "message": f"Inquiry ID {contact_id} updated!", "contact": contact})
+    conn.execute('''
+        UPDATE contacts SET status = ?, message = ? WHERE id = ?
+    ''', (status, message, contact_id))
+    conn.commit()
+    conn.close()
 
-# DELETE Method: Delete an inquiry
+    updated = {"id": contact_id, "name": contact['name'], "email": contact['email'], "message": message, "status": status}
+    return jsonify({"success": True, "method": "PUT", "message": f"Inquiry ID {contact_id} updated!", "contact": updated})
+
 @app.route('/api/contacts/<int:contact_id>', methods=['DELETE'])
 def delete_contact(contact_id):
-    global contacts_db
-    contact = next((c for c in contacts_db if c['id'] == contact_id), None)
+    conn = get_db_connection()
+    contact = conn.execute("SELECT * FROM contacts WHERE id = ?", (contact_id,)).fetchone()
     if not contact:
+        conn.close()
         return jsonify({"success": False, "message": "Inquiry not found!"}), 404
 
-    contacts_db = [c for c in contacts_db if c['id'] != contact_id]
+    conn.execute("DELETE FROM contacts WHERE id = ?", (contact_id,))
+    conn.commit()
+    conn.close()
     return jsonify({"success": True, "method": "DELETE", "message": f"Inquiry ID {contact_id} deleted successfully!"})
 
 
 # ==============================================================================
-# 5. GENERAL SYSTEM STATS ENDPOINT (GET)
+# 5. GENERAL SYSTEM STATS ENDPOINT
 # ==============================================================================
 
-# GET Method: System dashboard statistics
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
+    conn = get_db_connection()
+    students_cnt = conn.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    courses_cnt = conn.execute("SELECT COUNT(*) FROM courses").fetchone()[0]
+    trainers_cnt = conn.execute("SELECT COUNT(*) FROM trainers").fetchone()[0]
+    inquiries_cnt = conn.execute("SELECT COUNT(*) FROM contacts").fetchone()[0]
+    conn.close()
+
     return jsonify({
         "success": True,
         "method": "GET",
         "stats": {
-            "students_enrolled": len(users_db),
-            "courses_offered": len(courses_db),
-            "expert_trainers": len(trainers_db),
-            "active_inquiries": len(contacts_db)
+            "students_enrolled": students_cnt,
+            "courses_offered": courses_cnt,
+            "expert_trainers": trainers_cnt,
+            "active_inquiries": inquiries_cnt
         }
     })
 
 if __name__ == '__main__':
-    print("Starting NRIIT Learning Management Flask Server...")
+    print("Starting NRIIT Learning Management Flask Server with SQLite DB...")
     app.run(debug=True, port=5000)
-
