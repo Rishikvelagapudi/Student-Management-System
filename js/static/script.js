@@ -500,10 +500,11 @@ async function handleRegister(event) {
     if (res.success) {
       localStorage.setItem("nriit_last_registered_email", emailVal);
       showNotification(res.message, 'success', 'POST');
-      alert(`Registration Successful for ${nameVal}!`);
+      alert(`Registration Successful for ${nameVal}! Please login.`);
       window.location.href = "/login";
     }
   } catch (err) {
+    alert(err.message || "Registration failed!");
     showNotification(err.message, 'error', 'POST');
   }
 
@@ -517,7 +518,7 @@ async function handleLogin(event) {
   let emailEl = document.getElementById("loginEmail");
   let passwordEl = document.getElementById("loginPassword");
   let emailVal = emailEl ? emailEl.value.trim() : "";
-  let passwordVal = passwordEl ? passwordVal.value : "";
+  let passwordVal = passwordEl ? passwordEl.value : "";
 
   if (!emailVal || !passwordVal) {
     alert("Please enter both Email and Password!");
@@ -539,6 +540,7 @@ async function handleLogin(event) {
       window.location.href = "/";
     }
   } catch (err) {
+    alert(err.message || "Login failed! Please check your credentials.");
     showNotification(err.message, 'error', 'POST');
   }
 
