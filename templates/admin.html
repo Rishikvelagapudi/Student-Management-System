@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/static/style.css">
+    <title>Admin Dashboard - NRIIT LMS</title>
+</head>
+
+<body>
+    <div id="apiNotification"></div>
+    <header>
+        Admin Control Panel <br />
+        <h1>NRIIT System Administration</h1>
+        <p>Manage Registered Students, Courses, Trainers & System Data</p>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/admin" class="active">Admin Dashboard</a>
+            <a href="/courses">Courses</a>
+            <a href="/trainers">Trainers</a>
+            <a href="/contact">Inquiries</a>
+            <a href="#" onclick="handleLogout(event)">Logout</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 1100px; margin: 0 auto; padding: 1.5rem;">
+        <!-- Welcome Admin & Stats -->
+        <section style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h2>Welcome, Administrator</h2>
+                    <p>System Control Dashboard & Database Directory</p>
+                </div>
+                <div>
+                    <button class="btn btn-delete" onclick="handleLogout(event)">Logout Admin</button>
+                </div>
+            </div>
+            <div id="statsContainer" class="stats-grid" style="margin-top: 1rem;">
+                <p>Loading system statistics...</p>
+            </div>
+        </section>
+
+        <!-- 1. Registered Students Directory (Admin Only) -->
+        <section style="margin-bottom: 3rem; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Registered Students Directory</h2>
+                <span class="badge badge-post">Admin Access</span>
+            </div>
+            <p>Manage all registered student accounts, edit enrollment details, or remove user records from the database:</p>
+            <div id="registeredUsersList">
+                <p>Loading registered students list from database...</p>
+            </div>
+        </section>
+
+        <!-- 2. Courses Directory & Management -->
+        <section style="margin-bottom: 3rem; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Courses Directory & Management</h2>
+                <a href="#addCourseForm" class="btn btn-sm btn-post">+ Add New Course</a>
+            </div>
+            <div id="coursesTableContainer">
+                <p>Loading courses directory...</p>
+            </div>
+
+            <!-- Add Course Form -->
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                <h3>Add New Course</h3>
+                <form id="addCourseForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Course Title</label>
+                            <input type="text" id="newCourseTitle" placeholder="e.g. Data Science & AI" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div>
+                            <label>Duration</label>
+                            <input type="text" id="newCourseDuration" placeholder="e.g. 4 Months" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div>
+                            <label>Mode</label>
+                            <select id="newCourseMode" style="width: 100%; margin-top: 4px; padding: 8px;">
+                                <option value="Offline & Online">Offline & Online</option>
+                                <option value="Online">Online</option>
+                                <option value="Offline">Offline</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Trainer Assigned</label>
+                            <input type="text" id="newCourseTrainer" placeholder="e.g. Ms. Priya" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label>Topics Covered</label>
+                        <input type="text" id="newCourseTopics" placeholder="e.g. Python, Pandas, Machine Learning" required style="width: 100%; margin-top: 4px;">
+                    </div>
+                    <button type="submit" class="btn btn-post">+ Create Course</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. Trainers Directory & Management -->
+        <section style="margin-bottom: 3rem; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Trainers Directory & Management</h2>
+            </div>
+            <div id="trainersListContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <p>Loading trainers list...</p>
+            </div>
+
+            <!-- Add Trainer Form -->
+            <div style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                <h3>Add New Trainer</h3>
+                <form id="addTrainerForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label>Trainer Name</label>
+                            <input type="text" id="trainerName" placeholder="e.g. Dr. Ramesh" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div>
+                            <label>Role</label>
+                            <input type="text" id="trainerRole" placeholder="e.g. Java Lead" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div>
+                            <label>Experience</label>
+                            <input type="text" id="trainerExperience" placeholder="e.g. 5+ years" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                        <div>
+                            <label>Specialization</label>
+                            <input type="text" id="trainerSpec" placeholder="e.g. Spring Boot, Microservices" required style="width: 100%; margin-top: 4px;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-post">+ Add Trainer</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <hr>
+        <p>&copy; 2026 NRIIT Learning Management System | Admin Portal</p>
+        <p>System Administrator Contact: admin@nriit.edu | Phone: +91 9876543210</p>
+    </footer>
+
+    <script src="../js/static/script.js"></script>
+</body>
+
+</html>

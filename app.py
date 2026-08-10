@@ -76,6 +76,14 @@ def init_db():
             VALUES (?, ?, ?, ?, ?, ?)
         ''', ("Rishik Velagapudi", "rishik@nriit.edu", "123", "Python FullStack", "2002-05-15", "Male"))
 
+    # Seed Admin User (admin@11 / 12345678)
+    cursor.execute("SELECT id FROM users WHERE LOWER(email) = 'admin@11'")
+    if not cursor.fetchone():
+        cursor.execute('''
+            INSERT INTO users (name, email, password, course, dob, gender)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ("System Administrator", "admin@11", "12345678", "Admin", "2000-01-01", "Admin"))
+
     # Seed default courses if empty
     cursor.execute("SELECT COUNT(*) FROM courses")
     if cursor.fetchone()[0] == 0:
@@ -146,6 +154,11 @@ def register():
 @app.route('/login.html')
 def login():
     return render_template('login.html')
+
+@app.route('/admin')
+@app.route('/admin.html')
+def admin():
+    return render_template('admin.html')
 
 @app.route('/contact')
 @app.route('/contact.html')
@@ -410,6 +423,7 @@ def api_login():
     if user['password'] != password:
         return jsonify({"success": False, "message": "Invalid password!"}), 401
 
+    is_admin = (user['email'].lower() == 'admin@11')
     return jsonify({
         "success": True,
         "method": "POST",
@@ -420,7 +434,8 @@ def api_login():
             "email": user['email'],
             "course": user['course'],
             "dob": user['dob'] or '',
-            "gender": user['gender'] or ''
+            "gender": user['gender'] or '',
+            "role": "admin" if is_admin else "student"
         }
     })
 

@@ -537,7 +537,12 @@ async function handleLogin(event) {
       localStorage.setItem("nriit_current_user", JSON.stringify(res.user));
       showNotification(res.message, 'success', 'POST');
       alert(`Welcome back, ${res.user.name}!`);
-      window.location.href = "/";
+
+      if (res.user.email.toLowerCase() === 'admin@11' || res.user.role === 'admin') {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/";
+      }
     }
   } catch (err) {
     alert(err.message || "Login failed! Please check your credentials.");
@@ -703,13 +708,18 @@ document.addEventListener("DOMContentLoaded", () => {
   initCoursesPage();
   initTrainersPage();
   initContactPage();
+
+  // If on Admin page or containing user list table container
+  if (document.getElementById("registeredUsersList")) {
+    loadRegisteredUsersList();
+  }
 });
 
 function handleLogout(e) {
   if (e) e.preventDefault();
   localStorage.removeItem("nriit_current_user");
   alert("You have logged out.");
-  window.location.reload();
+  window.location.href = "/login";
 }
 window.handleLogout = handleLogout;
 
