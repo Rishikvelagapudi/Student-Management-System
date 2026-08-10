@@ -111,9 +111,6 @@ async function initHomePage() {
       console.warn("Could not load stats", e);
     }
   }
-
-  // Load Registered Users List via GET
-  loadRegisteredUsersList();
 }
 
 async function loadRegisteredUsersList() {
