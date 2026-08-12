@@ -11,15 +11,22 @@
 <body>
     <header>Login</header>
     <main>
-        <h2>Student Login</h2>
-        <form id="loginForm" onsubmit="return handleLogin(event)">
-            <label>Email</label><br>
-            <input type="email" id="loginEmail" placeholder="Enter your Email" required><br>
-            <label>Password</label><br>
-            <input type="password" id="loginPassword" placeholder="Enter Your Password" required> <br>
-            <input type="submit" value="Login" class="btn">
-            <p style="margin-top: 1rem;">Don't have an account? <a href="/register">Register here</a></p>
-        </form>
+        <div class="login-container">
+            <div class="login-form-wrapper">
+                <h2>Student Login</h2>
+                <form id="loginForm" onsubmit="return handleLogin(event)">
+                    <label>Email</label><br>
+                    <input type="email" id="loginEmail" placeholder="Enter your Email" required><br>
+                    <label>Password</label><br>
+                    <input type="password" id="loginPassword" placeholder="Enter Your Password" required> <br>
+                    <input type="submit" value="Login" class="btn">
+                    <p style="margin-top: 1rem;">Don't have an account? <a href="/register">Register here</a></p>
+                </form>
+            </div>
+            <div class="login-image-wrapper">
+                <img src="/image/banner.jpg" alt="Login Banner">
+            </div>
+        </div>
     </main>
     <footer>
 
