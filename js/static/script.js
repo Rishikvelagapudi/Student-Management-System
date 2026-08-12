@@ -12,18 +12,18 @@ console.log("NRIIT LMS REST API script.js loaded");
     currentUser = null;
   }
 
-  // If user is NOT logged in and trying to access a protected page -> Redirect to /login
+  // If user is NOT logged in and trying to access a protected page -> Redirect to login.html
   if (!currentUser && !isPublicPage) {
-    window.location.href = "/login";
+    window.location.href = "login.html";
     return;
   }
 
   // If user IS logged in and trying to access login/register -> Redirect to home or admin
   if (currentUser && isPublicPage) {
     if (currentUser.email && currentUser.email.toLowerCase() === 'admin@11') {
-      window.location.href = "/admin";
+      window.location.href = "admin.html";
     } else {
-      window.location.href = "/";
+      window.location.href = "index.html";
     }
   }
 })();
@@ -526,7 +526,7 @@ async function handleRegister(event) {
       localStorage.setItem("nriit_last_registered_email", emailVal);
       showNotification(res.message, 'success', 'POST');
       alert(`Registration Successful for ${nameVal}! Please login.`);
-      window.location.href = "/login";
+      window.location.href = "login.html";
     }
   } catch (err) {
     alert(err.message || "Registration failed!");
@@ -564,9 +564,9 @@ async function handleLogin(event) {
       alert(`Welcome back, ${res.user.name}!`);
 
       if (res.user.email.toLowerCase() === 'admin@11' || res.user.role === 'admin') {
-        window.location.href = "/admin";
+        window.location.href = "admin.html";
       } else {
-        window.location.href = "/";
+        window.location.href = "index.html";
       }
     }
   } catch (err) {
@@ -744,7 +744,7 @@ function handleLogout(e) {
   if (e) e.preventDefault();
   localStorage.removeItem("nriit_current_user");
   alert("You have logged out.");
-  window.location.href = "/login";
+  window.location.href = "login.html";
 }
 window.handleLogout = handleLogout;
 
