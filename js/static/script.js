@@ -1,5 +1,33 @@
 console.log("NRIIT LMS REST API script.js loaded");
 
+// --- AUTOMATIC AUTHENTICATION & REDIRECT ---
+(function checkAuthRedirect() {
+  const path = window.location.pathname.toLowerCase();
+  const isPublicPage = path.endsWith('/login') || path.endsWith('/login.html') || path.endsWith('/register') || path.endsWith('/register.html');
+
+  let currentUser = null;
+  try {
+    currentUser = JSON.parse(localStorage.getItem("nriit_current_user"));
+  } catch (e) {
+    currentUser = null;
+  }
+
+  // If user is NOT logged in and trying to access a protected page -> Redirect to /login
+  if (!currentUser && !isPublicPage) {
+    window.location.href = "/login";
+    return;
+  }
+
+  // If user IS logged in and trying to access login/register -> Redirect to home or admin
+  if (currentUser && isPublicPage) {
+    if (currentUser.email && currentUser.email.toLowerCase() === 'admin@11') {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/";
+    }
+  }
+})();
+
 // --- API Utility Function for GET, POST, PUT, DELETE ---
 async function apiFetch(endpoint, method = 'GET', data = null) {
   const options = {
