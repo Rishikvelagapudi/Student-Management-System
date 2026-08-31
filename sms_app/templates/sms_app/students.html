@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registered Students - NRIIT SMS</title>
+  <link rel="stylesheet" href="css/static/style.css">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT SMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>`n          <li><a href="/students">Students</a></li>
+          <li><a href="/students" class="active">Students</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/register" class="btn btn-primary btn-sm">+ Register Student</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <h1 class="page-title">Registered Students & Enrolled Courses</h1>
+      <p class="page-subtitle">View active student registrations, enrolled learning tracks, and course assignments.</p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="glass-panel" style="margin-bottom: 2rem; padding: 1.25rem 1.5rem;">
+      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="studentSearchInput" class="form-input" placeholder="🔍 Search student by name, email, or course..." style="flex: 1; min-width: 250px;">
+        <select id="courseFilterSelect" class="form-select" style="width: auto; min-width: 200px;">
+          <option value="ALL">All Enrolled Courses</option>
+          <option value="Python FullStack Development">Python FullStack</option>
+          <option value="Java FullStack Development">Java FullStack</option>
+          <option value="Data Science & AI">Data Science & AI</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Students Grid Layout -->
+    <div id="students-grid" class="grid-layout">
+      <!-- Dynamically loaded via script.js -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+  <script src="js/static/script.js"></script>
+</body>
+</html>

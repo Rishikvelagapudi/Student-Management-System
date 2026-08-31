@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initStats();
+  initStudents();
   initCourses();
   initTrainers();
   initAdmin();
@@ -77,11 +78,79 @@ async function initStats() {
     animateCounter('admin-stat-students', res.stats.students_enrolled);
     animateCounter('admin-stat-courses', res.stats.courses_offered);
     animateCounter('admin-stat-trainers', res.stats.expert_trainers);
-    animateCounter('admin-stat-inquiries', res.stats.active_inquiries);
+}
+
+// 2. Students Directory Logic
+async function initStudents() {
+  const container = document.getElementById('students-grid');
+  if (!container) return;
+
+  const res = await apiFetch('/api/students');
+  if (res.success && res.users) {
+    window.allStudents = res.users;
+    renderStudents(window.allStudents);
+
+    const searchInput = document.getElementById('studentSearchInput');
+    const filterSelect = document.getElementById('courseFilterSelect');
+
+    const filterHandler = () => {
+      const q = (searchInput ? searchInput.value : '').toLowerCase();
+      const course = filterSelect ? filterSelect.value : 'ALL';
+
+      const filtered = window.allStudents.filter(s => {
+        const matchesQuery = (s.name || '').toLowerCase().includes(q) ||
+                             (s.email || '').toLowerCase().includes(q) ||
+                             (s.course || '').toLowerCase().includes(q);
+        const matchesCourse = (course === 'ALL') || ((s.course || '').toLowerCase() === course.toLowerCase());
+        return matchesQuery && matchesCourse;
+      });
+      renderStudents(filtered);
+    };
+
+    if (searchInput) searchInput.addEventListener('input', filterHandler);
+    if (filterSelect) filterSelect.addEventListener('change', filterHandler);
   }
 }
 
-// 2. Courses Logic
+function renderStudents(students) {
+  const container = document.getElementById('students-grid');
+  if (!container) return;
+
+  if (!students || students.length === 0) {
+    container.innerHTML = `<div class="glass-panel" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">No registered students found matching your criteria.</div>`;
+    return;
+  }
+
+  container.innerHTML = students.map(s => `
+    <div class="card">
+      <div class="card-header">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <div class="avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">${(s.name || 'S').charAt(0)}</div>
+          <div>
+            <h3 class="card-title">${s.name}</h3>
+            <p style="font-size: 0.84rem; color: var(--text-secondary);">${s.email}</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-text" style="margin-bottom: 0.5rem;">
+          <strong>Enrolled Track:</strong>
+          <span class="badge badge-mode" style="margin-left: 0.25rem;">${s.course || 'Python FullStack'}</span>
+        </p>
+        <div class="card-topics" style="margin-top: 0.65rem;">
+          <div><strong>DOB:</strong> ${s.dob || 'N/A'} | <strong>Gender:</strong> ${s.gender || 'N/A'}</div>
+          ${s.created_at ? `<div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Registered: ${s.created_at.substring(0, 10)}</div>` : ''}
+        </div>
+      </div>
+      <div class="card-footer" style="justify-content: space-between;">
+        <span style="font-size: 0.82rem; font-weight: 600; color: var(--accent-cyan);">Status: Active</span>
+        <button onclick="window.location.href='/courses'" class="btn btn-outline btn-sm">View Track →</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// 3. Courses Logic
 async function initCourses() {
   const container = document.getElementById('courses-grid');
   if (!container) return;
