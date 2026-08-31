@@ -1,8 +1,8 @@
 from django.apps import AppConfig
 
-class LmsAppConfig(AppConfig):
+class SmsAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'lms_app'
+    name = 'sms_app'
 
     def ready(self):
         # Database seeding can be called after migrations

@@ -5,7 +5,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lms_app.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sms_app.settings')
     
     # Automatically default runserver port to config.PORT (5000) if no port is specified
     if len(sys.argv) > 1 and sys.argv[1] == 'runserver' and len(sys.argv) == 2:

@@ -1,5 +1,5 @@
 // ====================================================================
-// NRIIT LMS - Python FullStack Curriculum Logic & Algorithmic Concepts
+// NRIIT SMS - Python FullStack Curriculum Logic & Algorithmic Concepts
 // ====================================================================
 console.log("=== NRIIT Python FullStack Programming Logics & Algorithms ===");
 

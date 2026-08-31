@@ -1,5 +1,5 @@
 // ==========================================================================
-// NRIIT Learning Management System - Interactive Frontend Logic
+// NRIIT Student Management System - Interactive Frontend Logic
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
