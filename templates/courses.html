@@ -1,88 +1,96 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="css/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Courses - NRIIT LMS</title>
+  <link rel="stylesheet" href="css/static/style.css">
 </head>
-
 <body>
-  <div id="apiNotification"></div>
+
+  <!-- Navigation Header -->
   <header>
-    Home <br />
-    <h1>Courses in NRIIT Learning Management</h1>
-    <p>Learn Practice Get Placed</p>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="courses.html">Courses</a>
-      <a href="trainers.html">Trainers</a>
-      <a href="register.html">Register</a>
-      <a href="login.html">Login</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
-  <main>
-    <section>
-      <h2>Courses Offered</h2>
-      <p>All courses below are dynamically fetched from the server.</p>
-      
-      <div id="coursesTableContainer">
-        <p>Loading courses from server...</p>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT LMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/courses" class="active">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button id="openAddCourseModal" class="btn btn-primary btn-sm">+ Add Course</button>
       </div>
-    </section>
+    </div>
+  </header>
 
-    <!-- Add New Course Form -->
-    <section>
-      <h2>Add New Course</h2>
-      <form id="addCourseForm">
-        <label>Course Title</label>
-        <input type="text" id="newCourseTitle" placeholder="e.g. React & Node.js Masterclass" required>
-        
-        <label>Duration</label>
-        <input type="text" id="newCourseDuration" placeholder="e.g. 3 Months" required>
-        
-        <label>Mode of Training</label>
-        <select id="newCourseMode">
-          <option value="Offline & Online">Offline & Online</option>
-          <option value="Online">Online Only</option>
-          <option value="Offline">Offline Only</option>
-        </select>
-        
-        <label>Topics Covered</label>
-        <input type="text" id="newCourseTopics" placeholder="e.g. React, Express, MongoDB, Node.js">
-        
-        <label>Lead Trainer</label>
-        <input type="text" id="newCourseTrainer" placeholder="e.g. Mr. Sriram">
-        
-        <button type="submit" class="btn">Create Course</button>
-      </form>
-    </section>
+  <main class="container">
+    <div class="page-header">
+      <h1 class="page-title">Explore Our Programs</h1>
+      <p class="page-subtitle">Master in-demand technologies with industry-driven curricula and hands-on projects.</p>
+    </div>
 
-    <section>
-      <h2>Learning Path</h2>
-      <ol>
-        <li>HTML5 & CSS3 Fundamentals</li>
-        <li>JavaScript ES6+ & Async/Await</li>
-        <li>Flask / Backend RESTful APIs</li>
-        <li>SQL & Database Integration</li>
-        <li>FullStack Project Deployment</li>
-      </ol>
-    </section>
+    <!-- Courses Grid Container -->
+    <div id="courses-grid" class="grid-layout">
+      <!-- Dynamically loaded via script.js -->
+    </div>
   </main>
+
+  <!-- Add/Edit Course Modal -->
+  <div id="courseModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="modalCourseTitle" class="card-title" style="margin-bottom: 1.5rem;">Add New Course</h2>
+      <form id="courseForm">
+        <input type="hidden" id="courseId" value="">
+        <div class="form-group">
+          <label class="form-label">Course Title</label>
+          <input type="text" id="courseTitle" class="form-input" placeholder="e.g. FullStack Web Development" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration</label>
+          <input type="text" id="courseDuration" class="form-input" placeholder="e.g. 6 Months" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mode</label>
+          <select id="courseMode" class="form-select">
+            <option value="Offline & Online">Offline & Online</option>
+            <option value="Online">Online</option>
+            <option value="Offline">Offline</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Topics Covered</label>
+          <input type="text" id="courseTopics" class="form-input" placeholder="e.g. HTML5, CSS3, JavaScript, Django, SQL" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigned Trainer</label>
+          <input type="text" id="courseTrainer" class="form-input" placeholder="e.g. Mr. Sriram" required>
+        </div>
+        <div style="display: flex; gap: 0.85rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" id="closeCourseModal" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer>
-    <hr>
-    <p>&copy; 2026 NRIIT Learning Management System</p>
-    <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
-    <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
   </footer>
+
+  <div id="toast-container"></div>
   <script src="js/static/script.js"></script>
 </body>
-
 </html>
-
-
-
-

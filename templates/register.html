@@ -1,47 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/static/style.css">
-    <title>Register page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - NRIIT LMS</title>
+  <link rel="stylesheet" href="css/static/style.css">
 </head>
-
 <body>
-    <header>Register</header>
-    <main>
-        <div style="margin-bottom: 1rem;">
-            <a href="index.html" class="back-btn">&larr; Back to Home</a>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT LMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
         </div>
-        <h2>Student Registration </h2>
-        <form id="registerForm" onsubmit="return handleRegister(event)">
-            <label>Full Name</label><br>
-            <input type="text" id="regName" placeholder="Enter Your Name" required><br>
-            <label>Email</label><br>
-            <input type="email" id="regEmail" placeholder="Enter your email" required><br>
-            <label>Password</label><br>
-            <input type="password" id="regPassword" placeholder="Enter Your Password" required><br>
-            <label>Date of Birth</label><br>
-            <input type="date" id="regDob" placeholder="DOB"><br>
-            <label>Gender</label><br>
-            <input type="radio" name="gender" value="Male" checked>Male
-            <input type="radio" name="gender" value="Female">Female <br><br>
-            <label>Select Course</label>
-            <br>
-            <select id="regCourse">
-                <option value="Python FullStack">Python FullStack</option>
-                <option value="Java FullStack">Java FullStack</option>
-                <option value="Data Science & AI">Data Science & AI</option>
-            </select><br><br>
-            <button type="submit" class="btn">Register</button>
-            <p style="margin-top: 1rem;">Already have an account? <a href="login.html">Login here</a></p>
-        </form>
-    </main>
-    <script src="js/static/script.js"></script>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="auth-wrapper">
+    <div class="auth-card" style="max-width: 500px;">
+      <div class="auth-header">
+        <img src="image/static/logo.png" alt="NRIIT Logo" class="auth-logo">
+        <h2 class="page-title" style="font-size: 1.75rem;">Create Account</h2>
+        <p class="page-subtitle" style="font-size: 0.9rem;">Join NRIIT LMS to start learning today.</p>
+      </div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="regName" class="form-input" placeholder="Your Full Name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="regEmail" class="form-input" placeholder="your.email@nriit.edu" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="Create a password" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select Preferred Course</label>
+          <select id="regCourse" class="form-select">
+            <option value="Python FullStack Development">Python FullStack Development</option>
+            <option value="Java FullStack Development">Java FullStack Development</option>
+            <option value="Data Science & AI">Data Science & AI</option>
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" id="regDob" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select id="regGender" class="form-select">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Account →</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.88rem;">
+        Already registered? <a href="/login" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Login here</a>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast-container"></div>
+  <script src="js/static/script.js"></script>
 </body>
-
 </html>
-
-
-

@@ -1,69 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/static/style.css">
-    <title>Trainers - NRIIT LMS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trainers - NRIIT LMS</title>
+  <link rel="stylesheet" href="css/static/style.css">
 </head>
-
 <body>
-    <div id="apiNotification"></div>
-    <header>
-        Home <br>
-        <h1>Trainers in NRIIT Learning Management</h1>
-        <p>Learn Practice Get Placed</p>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="courses.html">Courses</a>
-            <a href="trainers.html">Trainers</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>Meet Our Trainers</h2>
-            <p>Faculty list loaded dynamically from server:</p>
-            <div id="trainersListContainer">
-                <p>Loading trainers from server...</p>
-            </div>
-        </section>
 
-        <!-- Add Trainer Form -->
-        <section>
-            <h2>Add New Trainer</h2>
-            <form id="addTrainerForm">
-                <label>Trainer Name</label>
-                <input type="text" id="trainerName" placeholder="e.g. Dr. K. Sharma" required>
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT LMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers" class="active">Trainers</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <button id="openAddTrainerModal" class="btn btn-primary btn-sm">+ Add Trainer</button>
+      </div>
+    </div>
+  </header>
 
-                <label>Role</label>
-                <input type="text" id="trainerRole" placeholder="e.g. Lead AI & Data Science Instructor">
+  <main class="container">
+    <div class="page-header">
+      <h1 class="page-title">Meet Our Mentors</h1>
+      <p class="page-subtitle">Learn directly from seasoned experts with proven track records in tech development.</p>
+    </div>
 
-                <label>Years of Experience</label>
-                <input type="text" id="trainerExperience" placeholder="e.g. 6+ years">
+    <!-- Trainers Grid Container -->
+    <div id="trainers-grid" class="grid-layout">
+      <!-- Dynamically populated via script.js -->
+    </div>
+  </main>
 
-                <label>Specialization</label>
-                <input type="text" id="trainerSpec" placeholder="e.g. Deep Learning, TensorFlow, Python">
+  <!-- Add/Edit Trainer Modal -->
+  <div id="trainerModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="modalTrainerTitle" class="card-title" style="margin-bottom: 1.5rem;">Add New Trainer</h2>
+      <form id="trainerForm">
+        <input type="hidden" id="trainerId" value="">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="trainerName" class="form-input" placeholder="e.g. Dr. Ramesh" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role / Designation</label>
+          <input type="text" id="trainerRole" class="form-input" placeholder="e.g. Java Lead & Architect" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Experience</label>
+          <input type="text" id="trainerExperience" class="form-input" placeholder="e.g. 8+ years" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Specialization</label>
+          <input type="text" id="trainerSpecialization" class="form-input" placeholder="e.g. Spring Boot, React, Microservices" required>
+        </div>
+        <div style="display: flex; gap: 0.85rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" id="closeTrainerModal" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Trainer</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-                <button type="submit" class="btn">Add Trainer</button>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <hr>
-        <p>&copy; 2026 NRIIT Learning Management System</p>
-        <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
-        <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
-    </footer>
-    <script src="js/static/script.js"></script>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+  <script src="js/static/script.js"></script>
 </body>
-
 </html>
-
-
-
-

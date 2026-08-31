@@ -1,74 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NRIIT Learning Management System</title>
   <link rel="stylesheet" href="css/static/style.css">
-  <title>Home - NRIIT LMS</title>
 </head>
-
 <body>
-  <div id="apiNotification"></div>
+
+  <!-- Navigation Header -->
   <header>
-    Home <br />
-    <h1>NRIIT Learning Management</h1>
-    <p>Learn Practice Get Placed</p>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="courses.html">Courses</a>
-      <a href="trainers.html">Trainers</a>
-      <a href="register.html">Register</a>
-      <a href="login.html">Login</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT LMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/" class="active">Home</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+        <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
   </header>
-  <main>
-    <section>
-      <h2 id="Welcome">Welcome to NRIIT Learning Management System</h2>
-      <p>
-        The NRIIT Management System helps students explore courses, register online, learn from experienced trainers and
-        track their learning journey connected directly to Flask REST API.
-      </p>
-      <p id="message">Learning never Stops</p>
-      <img id="logoImage" src="image/static/logo.png" alt="NRIIT Logo" class="banner">
-      <div class="button-group">
-        <button id="imageBtn" class="btn" onclick="showWelcomeAlert()">click me</button>
-        <button id="changeHeadingBtn" class="btn" onclick="changeHeadingText()">changeheading</button>
-        <button id="backBtn" class="btn" onclick="restoreHeadingText()">back</button>
+
+  <!-- Hero Section -->
+  <main class="container">
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span>✨ Modern AI-Powered Learning</span>
+        </div>
+        <h1 class="hero-title">
+          Empowering Next-Gen <span>Tech Leaders</span> & Engineers
+        </h1>
+        <p class="hero-description">
+          Welcome to NRI Institute of Technology LMS. Discover industry-aligned FullStack, AI, and Data Science programs taught by elite industry experts.
+        </p>
+        <div class="hero-actions">
+          <a href="/courses" class="btn btn-primary">Explore Courses →</a>
+          <a href="/admin" class="btn btn-outline">Admin Dashboard</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <div class="hero-image-card">
+          <img src="image/static/logo.png" alt="NRIIT Learning Portal">
+        </div>
       </div>
     </section>
 
-    <!-- Dynamic System Stats -->
-    <section>
-      <h2>System Overview</h2>
-      <div id="statsContainer" class="stats-grid">
-        <p>Loading real-time stats from Flask backend...</p>
+    <!-- Key Statistics Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-students">0</div>
+        <div class="stat-label">Students Enrolled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-courses">0</div>
+        <div class="stat-label">Courses Offered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-trainers">0</div>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-inquiries">0</div>
+        <div class="stat-label">Active Inquiries</div>
       </div>
     </section>
-
-
-    <section>
-      <h2>Why choose NRIIT?</h2>
-      <ul>
-        <li>Experienced Trainers</li>
-        <li>Industry Projects</li>
-        <li>Placement Assistance</li>
-      </ul>
-    </section>
-
   </main>
+
+  <!-- Footer -->
   <footer>
-    <hr>
-    <p>&copy; 2026 NRIIT Learning Management System</p>
-    <p>Email: info@nriit.edu | Phone: +91 9876543210</p>
-    <p>Follow Us: <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">LinkedIn</a></p>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
   </footer>
+
+  <div id="toast-container"></div>
   <script src="js/static/script.js"></script>
 </body>
-
 </html>
-
-
-

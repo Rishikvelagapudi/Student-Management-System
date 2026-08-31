@@ -1,750 +1,485 @@
-console.log("NRIIT LMS REST API script.js loaded");
+// ==========================================================================
+// NRIIT Learning Management System - Interactive Frontend Logic
+// ==========================================================================
 
-// --- AUTOMATIC AUTHENTICATION & REDIRECT ---
-(function checkAuthRedirect() {
-  const path = window.location.pathname.toLowerCase();
-  const isPublicPage = path.endsWith('/login') || path.endsWith('/login.html') || path.endsWith('/register') || path.endsWith('/register.html');
+document.addEventListener('DOMContentLoaded', () => {
+  initStats();
+  initCourses();
+  initTrainers();
+  initAdmin();
+  initAuth();
+  initContact();
+  initModals();
+});
 
-  let currentUser = null;
-  try {
-    currentUser = JSON.parse(localStorage.getItem("nriit_current_user"));
-  } catch (e) {
-    currentUser = null;
-  }
+// Helper: Toast Notifications
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
 
-  // If user is NOT logged in and trying to access a protected page -> Redirect to login.html
-  if (!currentUser && !isPublicPage) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  // If user IS logged in and trying to access login/register -> Redirect to home or admin
-  if (currentUser && isPublicPage) {
-    if (currentUser.email && currentUser.email.toLowerCase() === 'admin@11') {
-      window.location.href = "admin.html";
-    } else {
-      window.location.href = "index.html";
-    }
-  }
-})();
-
-// --- API Utility Function for GET, POST, PUT, DELETE ---
-async function apiFetch(endpoint, method = 'GET', data = null) {
-  const options = {
-    method: method,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  };
-
-  if (data && (method === 'POST' || method === 'PUT')) {
-    options.body = JSON.stringify(data);
-  }
-
-  try {
-    const response = await fetch(endpoint, options);
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || `HTTP error! Status: ${response.status}`);
-    }
-    return result;
-  } catch (error) {
-    console.error(`API Error [${method} ${endpoint}]:`, error);
-    showNotification(`Error: ${error.message}`, 'error', method);
-    throw error;
-  }
-}
-
-// --- Notification Banner Helper ---
-function showNotification(message, type = 'success', method = 'INFO') {
-  let alertContainer = document.getElementById("apiNotification");
-  if (!alertContainer) {
-    alertContainer = document.createElement("div");
-    alertContainer.id = "apiNotification";
-    document.body.prepend(alertContainer);
-  }
-
-  const badgeClass = {
-    'GET': 'badge-get',
-    'POST': 'badge-post',
-    'PUT': 'badge-put',
-    'DELETE': 'badge-delete'
-  }[method] || 'badge-get';
-
-  const alertClass = type === 'error' ? 'api-alert-error' : (type === 'info' ? 'api-alert-info' : 'api-alert-success');
-
-  alertContainer.innerHTML = `
-    <div class="api-alert ${alertClass}">
-      <span>${message}</span>
-    </div>
-  `;
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span>${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</span> <div>${message}</div>`;
+  container.appendChild(toast);
 
   setTimeout(() => {
-    if (alertContainer) alertContainer.innerHTML = '';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(() => toast.remove(), 300);
   }, 4000);
 }
 
-// --- Legacy Heading Buttons & Interactivity ---
-function showWelcomeAlert() {
-  alert("Welcome to Dr RVR NRI University");
-}
-
-function changeHeadingText() {
-  let headingEl = document.getElementById("Welcome");
-  if (!headingEl) return;
-  headingEl.innerHTML = "Dr RVR NRI University";
-}
-
-function restoreHeadingText() {
-  let headingEl = document.getElementById("Welcome");
-  if (!headingEl) return;
-  headingEl.innerHTML = "Welcome to NRIIT Learning Management System";
-  alert("Welcome to NRIIT Learning Management System");
-}
-
-window.showWelcomeAlert = showWelcomeAlert;
-window.changeHeadingText = changeHeadingText;
-window.restoreHeadingText = restoreHeadingText;
-
-// --- 1. HOMEPAGE MODULE (index.html) ---
-async function initHomePage() {
-  // Load Stats via GET
-  const statsContainer = document.getElementById("statsContainer");
-  if (statsContainer) {
-    try {
-      const res = await apiFetch('/api/stats', 'GET');
-      if (res.success && res.stats) {
-        statsContainer.innerHTML = `
-          <div class="stat-card">
-            <h4>${res.stats.students_enrolled}</h4>
-            <p>Students Enrolled</p>
-          </div>
-          <div class="stat-card">
-            <h4>${res.stats.courses_offered}</h4>
-            <p>Courses Offered</p>
-          </div>
-          <div class="stat-card">
-            <h4>${res.stats.expert_trainers}</h4>
-            <p>Expert Trainers</p>
-          </div>
-          <div class="stat-card">
-            <h4>${res.stats.active_inquiries}</h4>
-            <p>Active Inquiries</p>
-          </div>
-        `;
-      }
-    } catch (e) {
-      console.warn("Could not load stats", e);
-    }
-  }
-}
-
-async function loadRegisteredUsersList() {
-  const usersContainer = document.getElementById("registeredUsersList");
-  if (!usersContainer) return;
-
-  try {
-    const res = await apiFetch('/api/users', 'GET');
-    if (res.success && res.users) {
-      if (res.users.length === 0) {
-        usersContainer.innerHTML = "<p>No users registered yet.</p>";
-        return;
-      }
-
-      let html = `
-        <table border="1" cellpadding="8">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Enrolled Course</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      res.users.forEach(u => {
-        html += `
-          <tr>
-            <td>${u.id}</td>
-            <td><strong>${u.name}</strong></td>
-            <td>${u.email}</td>
-            <td>${u.course}</td>
-            <td>
-              <button class="btn btn-sm btn-put" onclick="editUserPrompt(${u.id}, '${u.name}', '${u.course}')">
-                Edit
-              </button>
-              <button class="btn btn-sm btn-delete" onclick="deleteUser(${u.id}, '${u.name}')">
-                Remove
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      html += `</tbody></table>`;
-      usersContainer.innerHTML = html;
-    }
-  } catch (e) {
-    usersContainer.innerHTML = "<p style='color:red;'>Failed to load user list from server.</p>";
-  }
-}
-
-// User Edit via PUT /api/users/<id>
-async function editUserPrompt(id, currentName, currentCourse) {
-  const newName = prompt("Enter updated Name:", currentName);
-  if (newName === null) return;
-  const newCourse = prompt("Enter updated Course:", currentCourse);
-  if (newCourse === null) return;
-
-  try {
-    const res = await apiFetch(`/api/users/${id}`, 'PUT', { name: newName, course: newCourse });
-    if (res.success) {
-      showNotification(res.message, 'success', 'PUT');
-      loadRegisteredUsersList();
-      initHomePage();
-    }
-  } catch (e) {
-    showNotification(e.message, 'error', 'PUT');
-  }
-}
-
-// User Delete via DELETE /api/users/<id>
-async function deleteUser(id, name) {
-  if (!confirm(`Are you sure you want to delete user '${name}'?`)) return;
-
-  try {
-    const res = await apiFetch(`/api/users/${id}`, 'DELETE');
-    if (res.success) {
-      showNotification(res.message, 'success', 'DELETE');
-      loadRegisteredUsersList();
-      initHomePage();
-    }
-  } catch (e) {
-    showNotification(e.message, 'error', 'DELETE');
-  }
-}
-
-window.editUserPrompt = editUserPrompt;
-window.deleteUser = deleteUser;
-
-
-// --- 2. COURSES MODULE (courses.html) ---
-async function initCoursesPage() {
-  loadCourses();
-
-  const addForm = document.getElementById("addCourseForm");
-  if (addForm) {
-    addForm.addEventListener("submit", handleAddCourse);
-  }
-}
-
-async function loadCourses() {
-  const tableContainer = document.getElementById("coursesTableContainer");
-  if (!tableContainer) return;
-
-  try {
-    const res = await apiFetch('/api/courses', 'GET');
-    if (res.success && res.courses) {
-      let html = `
-        <table border="1" cellpadding="10">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Course Title</th>
-              <th>Duration</th>
-              <th>Mode</th>
-              <th>Topics Covered</th>
-              <th>Trainer</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      res.courses.forEach(c => {
-        html += `
-          <tr>
-            <td>${c.id}</td>
-            <td><strong>${c.title}</strong></td>
-            <td>${c.duration}</td>
-            <td>${c.mode}</td>
-            <td>${c.topics}</td>
-            <td>${c.trainer}</td>
-            <td>
-              <button class="btn btn-sm btn-put" onclick="editCoursePrompt(${c.id}, '${c.title.replace(/'/g, "\\'")}', '${c.duration}', '${c.mode}')">
-                Edit
-              </button>
-              <button class="btn btn-sm btn-delete" onclick="deleteCourse(${c.id}, '${c.title.replace(/'/g, "\\'")}')">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      html += `</tbody></table>`;
-      tableContainer.innerHTML = html;
-    }
-  } catch (e) {
-    tableContainer.innerHTML = "<p style='color:red;'>Failed to fetch courses from backend API.</p>";
-  }
-}
-
-// Add Course via POST /api/courses
-async function handleAddCourse(e) {
-  if (e) e.preventDefault();
-
-  const titleEl = document.getElementById("newCourseTitle");
-  const durationEl = document.getElementById("newCourseDuration");
-  const modeEl = document.getElementById("newCourseMode");
-  const topicsEl = document.getElementById("newCourseTopics");
-  const trainerEl = document.getElementById("newCourseTrainer");
-
-  const newCourseData = {
-    title: titleEl ? titleEl.value.trim() : '',
-    duration: durationEl ? durationEl.value.trim() : '3 Months',
-    mode: modeEl ? modeEl.value : 'Offline',
-    topics: topicsEl ? topicsEl.value.trim() : 'Core Concepts',
-    trainer: trainerEl ? trainerEl.value.trim() : 'Faculty'
+// Helper: API Fetcher
+async function apiFetch(url, method = 'GET', data = null) {
+  const options = {
+    method,
+    headers: { 'Content-Type': 'application/json' }
   };
-
-  if (!newCourseData.title) {
-    alert("Please enter a course title!");
-    return;
+  if (data) {
+    options.body = JSON.stringify(data);
   }
-
   try {
-    const res = await apiFetch('/api/courses', 'POST', newCourseData);
-    if (res.success) {
-      showNotification(res.message, 'success', 'POST');
-      if (document.getElementById("addCourseForm")) document.getElementById("addCourseForm").reset();
-      loadCourses();
-    }
+    const res = await fetch(url, options);
+    const json = await res.json();
+    return json;
   } catch (err) {
-    showNotification(err.message, 'error', 'POST');
+    console.error('API Error:', err);
+    showToast('Network error or server unreachable', 'error');
+    return { success: false, message: 'Server error' };
   }
 }
 
-// Edit Course via PUT /api/courses/<id>
-async function editCoursePrompt(id, currentTitle, currentDuration, currentMode) {
-  const newTitle = prompt("Update Course Title:", currentTitle);
-  if (newTitle === null) return;
-  const newDuration = prompt("Update Duration:", currentDuration);
-  if (newDuration === null) return;
-  const newMode = prompt("Update Mode (Online / Offline / Hybrid):", currentMode);
-  if (newMode === null) return;
-
-  try {
-    const res = await apiFetch(`/api/courses/${id}`, 'PUT', {
-      title: newTitle,
-      duration: newDuration,
-      mode: newMode
-    });
-    if (res.success) {
-      showNotification(res.message, 'success', 'PUT');
-      loadCourses();
+// Counter Animation for Dashboard & Hero Stats
+function animateCounter(elemId, target) {
+  const elem = document.getElementById(elemId);
+  if (!elem) return;
+  let current = 0;
+  const increment = Math.max(1, Math.ceil(target / 25));
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
     }
-  } catch (err) {
-    showNotification(err.message, 'error', 'PUT');
+    elem.textContent = current;
+  }, 40);
+}
+
+// 1. Stats Loader
+async function initStats() {
+  const res = await apiFetch('/api/stats');
+  if (res.success && res.stats) {
+    animateCounter('stat-students', res.stats.students_enrolled);
+    animateCounter('stat-courses', res.stats.courses_offered);
+    animateCounter('stat-trainers', res.stats.expert_trainers);
+    animateCounter('stat-inquiries', res.stats.active_inquiries);
+
+    animateCounter('admin-stat-students', res.stats.students_enrolled);
+    animateCounter('admin-stat-courses', res.stats.courses_offered);
+    animateCounter('admin-stat-trainers', res.stats.expert_trainers);
+    animateCounter('admin-stat-inquiries', res.stats.active_inquiries);
   }
 }
 
-// Delete Course via DELETE /api/courses/<id>
-async function deleteCourse(id, title) {
-  if (!confirm(`Are you sure you want to delete course '${title}'?`)) return;
-
-  try {
-    const res = await apiFetch(`/api/courses/${id}`, 'DELETE');
-    if (res.success) {
-      showNotification(res.message, 'success', 'DELETE');
-      loadCourses();
-    }
-  } catch (err) {
-    showNotification(err.message, 'error', 'DELETE');
-  }
-}
-
-window.editCoursePrompt = editCoursePrompt;
-window.deleteCourse = deleteCourse;
-
-
-// --- 3. TRAINERS MODULE (trainers.html) ---
-async function initTrainersPage() {
-  loadTrainers();
-
-  const addTrainerForm = document.getElementById("addTrainerForm");
-  if (addTrainerForm) {
-    addTrainerForm.addEventListener("submit", handleAddTrainer);
-  }
-}
-
-async function loadTrainers() {
-  const trainersContainer = document.getElementById("trainersListContainer");
-  if (!trainersContainer) return;
-
-  try {
-    const res = await apiFetch('/api/trainers', 'GET');
-    if (res.success && res.trainers) {
-      let html = '';
-      res.trainers.forEach(t => {
-        html += `
-          <article style="margin-bottom: 1.5rem;">
-            <img src="../image/static/logo.png" alt="${t.name}" width="120">
-            <h3>${t.name}</h3>
-            <p><strong>Role:</strong> ${t.role}</p>
-            <p><strong>Experience:</strong> ${t.experience}</p>
-            <p><strong>Specialization:</strong> ${t.specialization}</p>
-            <div style="margin-top: 1rem;">
-              <button class="btn btn-sm btn-put" onclick="editTrainerPrompt(${t.id}, '${t.name.replace(/'/g, "\\'")}', '${t.role.replace(/'/g, "\\'")}')">
-                Edit Trainer
-              </button>
-              <button class="btn btn-sm btn-delete" onclick="deleteTrainer(${t.id}, '${t.name.replace(/'/g, "\\'")}')">
-                Remove Trainer
-              </button>
-            </div>
-          </article>
-        `;
-      });
-      trainersContainer.innerHTML = html;
-    }
-  } catch (e) {
-    trainersContainer.innerHTML = "<p style='color:red;'>Failed to load trainers from backend API.</p>";
-  }
-}
-
-// Add Trainer via POST /api/trainers
-async function handleAddTrainer(e) {
-  if (e) e.preventDefault();
-
-  const nameEl = document.getElementById("trainerName");
-  const roleEl = document.getElementById("trainerRole");
-  const expEl = document.getElementById("trainerExperience");
-  const specEl = document.getElementById("trainerSpec");
-
-  const trainerData = {
-    name: nameEl ? nameEl.value.trim() : '',
-    role: roleEl ? roleEl.value.trim() : 'Instructor',
-    experience: expEl ? expEl.value.trim() : '2+ years',
-    specialization: specEl ? specEl.value.trim() : 'FullStack'
-  };
-
-  if (!trainerData.name) {
-    alert("Please enter trainer name!");
-    return;
-  }
-
-  try {
-    const res = await apiFetch('/api/trainers', 'POST', trainerData);
-    if (res.success) {
-      showNotification(res.message, 'success', 'POST');
-      if (document.getElementById("addTrainerForm")) document.getElementById("addTrainerForm").reset();
-      loadTrainers();
-    }
-  } catch (err) {
-    showNotification(err.message, 'error', 'POST');
-  }
-}
-
-// Edit Trainer via PUT /api/trainers/<id>
-async function editTrainerPrompt(id, currentName, currentRole) {
-  const newName = prompt("Update Trainer Name:", currentName);
-  if (newName === null) return;
-  const newRole = prompt("Update Role:", currentRole);
-  if (newRole === null) return;
-
-  try {
-    const res = await apiFetch(`/api/trainers/${id}`, 'PUT', { name: newName, role: newRole });
-    if (res.success) {
-      showNotification(res.message, 'success', 'PUT');
-      loadTrainers();
-    }
-  } catch (err) {
-    showNotification(err.message, 'error', 'PUT');
-  }
-}
-
-// Delete Trainer via DELETE /api/trainers/<id>
-async function deleteTrainer(id, name) {
-  if (!confirm(`Are you sure you want to remove trainer '${name}'?`)) return;
-
-  try {
-    const res = await apiFetch(`/api/trainers/${id}`, 'DELETE');
-    if (res.success) {
-      showNotification(res.message, 'success', 'DELETE');
-      loadTrainers();
-    }
-  } catch (err) {
-    showNotification(err.message, 'error', 'DELETE');
-  }
-}
-
-window.editTrainerPrompt = editTrainerPrompt;
-window.deleteTrainer = deleteTrainer;
-
-
-// --- 4. AUTHENTICATION MODULE (register.html & login.html) ---
-async function handleRegister(event) {
-  if (event) event.preventDefault();
-
-  let nameEl = document.getElementById("regName");
-  let emailEl = document.getElementById("regEmail");
-  let passwordEl = document.getElementById("regPassword");
-  let dobEl = document.getElementById("regDob");
-  let courseEl = document.getElementById("regCourse");
-  let genderEl = document.querySelector('input[name="gender"]:checked');
-
-  let nameVal = nameEl ? nameEl.value.trim() : "Student";
-  let emailVal = emailEl ? emailEl.value.trim() : "";
-  let passwordVal = passwordEl ? passwordEl.value : "";
-  let dobVal = dobEl ? dobEl.value : "";
-  let courseVal = courseEl ? courseEl.value : "Python FullStack";
-  let genderVal = genderEl ? genderEl.value : "Male";
-
-  if (!emailVal || !passwordVal) {
-    alert("Please enter both Email and Password!");
-    return false;
-  }
-
-  const payload = {
-    name: nameVal,
-    email: emailVal,
-    password: passwordVal,
-    dob: dobVal,
-    course: courseVal,
-    gender: genderVal
-  };
-
-  try {
-    // POST request to backend
-    const res = await apiFetch('/api/register', 'POST', payload);
-    if (res.success) {
-      localStorage.setItem("nriit_last_registered_email", emailVal);
-      showNotification(res.message, 'success', 'POST');
-      alert(`Registration Successful for ${nameVal}! Please login.`);
-      window.location.href = "login.html";
-    }
-  } catch (err) {
-    alert(err.message || "Registration failed!");
-    showNotification(err.message, 'error', 'POST');
-  }
-
-  return false;
-}
-window.handleRegister = handleRegister;
-
-async function handleLogin(event) {
-  if (event) event.preventDefault();
-
-  let emailEl = document.getElementById("loginEmail");
-  let passwordEl = document.getElementById("loginPassword");
-  let emailVal = emailEl ? emailEl.value.trim() : "";
-  let passwordVal = passwordEl ? passwordEl.value : "";
-
-  if (!emailVal || !passwordVal) {
-    alert("Please enter both Email and Password!");
-    return false;
-  }
-
-  const payload = {
-    email: emailVal,
-    password: passwordVal
-  };
-
-  try {
-    // POST request to backend
-    const res = await apiFetch('/api/login', 'POST', payload);
-    if (res.success && res.user) {
-      localStorage.setItem("nriit_current_user", JSON.stringify(res.user));
-      showNotification(res.message, 'success', 'POST');
-      alert(`Welcome back, ${res.user.name}!`);
-
-      if (res.user.email.toLowerCase() === 'admin@11' || res.user.role === 'admin') {
-        window.location.href = "admin.html";
-      } else {
-        window.location.href = "index.html";
-      }
-    }
-  } catch (err) {
-    alert(err.message || "Login failed! Please check your credentials.");
-    showNotification(err.message, 'error', 'POST');
-  }
-
-  return false;
-}
-window.handleLogin = handleLogin;
-
-
-// --- 5. CONTACT & INQUIRIES MODULE (contact.html) ---
-async function initContactPage() {
-  loadContacts();
-
-  const contactForm = document.getElementById("contactForm");
-  if (contactForm) {
-    contactForm.addEventListener("submit", handleContactSubmit);
-  }
-}
-
-async function handleContactSubmit(e) {
-  if (e) e.preventDefault();
-
-  const nameEl = document.getElementById("contactName");
-  const emailEl = document.getElementById("contactEmail");
-  const msgEl = document.getElementById("contactMessage");
-
-  const payload = {
-    name: nameEl ? nameEl.value.trim() : '',
-    email: emailEl ? emailEl.value.trim() : '',
-    message: msgEl ? msgEl.value.trim() : ''
-  };
-
-  if (!payload.name || !payload.email || !payload.message) {
-    alert("Please fill out Name, Email, and Message!");
-    return;
-  }
-
-  try {
-    const res = await apiFetch('/api/contacts', 'POST', payload);
-    if (res.success) {
-      showNotification(res.message, 'success', 'POST');
-      if (document.getElementById("contactForm")) document.getElementById("contactForm").reset();
-      loadContacts();
-    }
-  } catch (err) {
-    showNotification(err.message, 'error', 'POST');
-  }
-}
-
-async function loadContacts() {
-  const container = document.getElementById("contactsListContainer");
+// 2. Courses Logic
+async function initCourses() {
+  const container = document.getElementById('courses-grid');
   if (!container) return;
 
-  try {
-    const res = await apiFetch('/api/contacts', 'GET');
-    if (res.success && res.contacts) {
-      if (res.contacts.length === 0) {
-        container.innerHTML = "<p>No active inquiries found.</p>";
-        return;
+  const res = await apiFetch('/api/courses');
+  if (res.success && res.courses) {
+    container.innerHTML = res.courses.map(c => `
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">${c.title}</h3>
+          <span class="badge badge-duration">${c.duration || '3 Months'}</span>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><strong>Mode:</strong> <span class="badge badge-mode">${c.mode || 'Online'}</span></p>
+          <div class="card-topics">
+            <strong>Topics:</strong> ${c.topics || 'N/A'}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="trainer-info">
+            <div class="avatar">${(c.trainer || 'Faculty').charAt(0)}</div>
+            <span style="font-size: 0.88rem; font-weight: 600;">${c.trainer || 'Faculty'}</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button onclick="editCourse(${c.id}, '${escapeHtml(c.title)}', '${escapeHtml(c.duration)}', '${escapeHtml(c.mode)}', '${escapeHtml(c.topics)}', '${escapeHtml(c.trainer)}')" class="btn btn-outline btn-sm">Edit</button>
+            <button onclick="deleteCourse(${c.id})" class="btn btn-danger btn-sm">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const courseForm = document.getElementById('courseForm');
+  if (courseForm) {
+    courseForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('courseId').value;
+      const payload = {
+        title: document.getElementById('courseTitle').value,
+        duration: document.getElementById('courseDuration').value,
+        mode: document.getElementById('courseMode').value,
+        topics: document.getElementById('courseTopics').value,
+        trainer: document.getElementById('courseTrainer').value
+      };
+
+      const url = id ? `/api/courses/${id}` : '/api/courses';
+      const method = id ? 'PUT' : 'POST';
+      const res = await apiFetch(url, method, payload);
+
+      if (res.success) {
+        showToast(res.message, 'success');
+        document.getElementById('courseModal').classList.remove('active');
+        initCourses();
+        initStats();
+      } else {
+        showToast(res.message || 'Action failed', 'error');
       }
-
-      let html = `
-        <table border="1" cellpadding="8">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Message</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-
-      res.contacts.forEach(c => {
-        const isResolved = c.status === 'Resolved';
-        html += `
-          <tr>
-            <td>${c.id}</td>
-            <td><strong>${c.name}</strong></td>
-            <td>${c.email}</td>
-            <td>${c.message}</td>
-            <td><span class="badge ${isResolved ? 'badge-get' : 'badge-put'}">${c.status}</span></td>
-            <td>
-              <button class="btn btn-sm btn-put" onclick="toggleContactStatus(${c.id}, '${c.status}')">
-                ${isResolved ? 'Mark Pending' : 'Mark Resolved'}
-              </button>
-              <button class="btn btn-sm btn-delete" onclick="deleteContact(${c.id})">
-                Delete
-              </button>
-            </td>
-          </tr>
-        `;
-      });
-
-      html += `</tbody></table>`;
-      container.innerHTML = html;
-    }
-  } catch (e) {
-    container.innerHTML = "<p style='color:red;'>Failed to load contact inquiries.</p>";
+    });
   }
 }
 
-// Update Inquiry Status via PUT /api/contacts/<id>
-async function toggleContactStatus(id, currentStatus) {
-  const newStatus = currentStatus === 'Resolved' ? 'Pending' : 'Resolved';
-  try {
-    const res = await apiFetch(`/api/contacts/${id}`, 'PUT', { status: newStatus });
+function escapeHtml(str) {
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+window.editCourse = function(id, title, duration, mode, topics, trainer) {
+  document.getElementById('courseId').value = id;
+  document.getElementById('courseTitle').value = title;
+  document.getElementById('courseDuration').value = duration;
+  document.getElementById('courseMode').value = mode;
+  document.getElementById('courseTopics').value = topics;
+  document.getElementById('courseTrainer').value = trainer;
+  document.getElementById('modalCourseTitle').textContent = 'Edit Course';
+  document.getElementById('courseModal').classList.add('active');
+};
+
+window.deleteCourse = async function(id) {
+  if (confirm('Are you sure you want to delete this course?')) {
+    const res = await apiFetch(`/api/courses/${id}`, 'DELETE');
     if (res.success) {
-      showNotification(res.message, 'success', 'PUT');
-      loadContacts();
+      showToast(res.message, 'success');
+      initCourses();
+      initStats();
+    } else {
+      showToast(res.message, 'error');
     }
-  } catch (err) {
-    showNotification(err.message, 'error', 'PUT');
+  }
+};
+
+// 3. Trainers Logic
+async function initTrainers() {
+  const container = document.getElementById('trainers-grid');
+  if (!container) return;
+
+  const res = await apiFetch('/api/trainers');
+  if (res.success && res.trainers) {
+    container.innerHTML = res.trainers.map(t => `
+      <div class="card">
+        <div class="card-header">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div class="avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">${(t.name || 'T').charAt(0)}</div>
+            <div>
+              <h3 class="card-title">${t.name}</h3>
+              <p style="font-size: 0.82rem; color: var(--accent-cyan); font-weight: 600;">${t.role || 'Instructor'}</p>
+            </div>
+          </div>
+          <span class="badge badge-mode">${t.experience || '3+ yrs'}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-topics" style="margin-top: 0.5rem;">
+            <strong>Specialization:</strong> ${t.specialization || 'FullStack Tech'}
+          </div>
+        </div>
+        <div class="card-footer" style="justify-content: flex-end; gap: 0.5rem;">
+          <button onclick="editTrainer(${t.id}, '${escapeHtml(t.name)}', '${escapeHtml(t.role)}', '${escapeHtml(t.experience)}', '${escapeHtml(t.specialization)}')" class="btn btn-outline btn-sm">Edit</button>
+          <button onclick="deleteTrainer(${t.id})" class="btn btn-danger btn-sm">Remove</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const trainerForm = document.getElementById('trainerForm');
+  if (trainerForm) {
+    trainerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('trainerId').value;
+      const payload = {
+        name: document.getElementById('trainerName').value,
+        role: document.getElementById('trainerRole').value,
+        experience: document.getElementById('trainerExperience').value,
+        specialization: document.getElementById('trainerSpecialization').value
+      };
+
+      const url = id ? `/api/trainers/${id}` : '/api/trainers';
+      const method = id ? 'PUT' : 'POST';
+      const res = await apiFetch(url, method, payload);
+
+      if (res.success) {
+        showToast(res.message, 'success');
+        document.getElementById('trainerModal').classList.remove('active');
+        initTrainers();
+        initStats();
+      } else {
+        showToast(res.message || 'Action failed', 'error');
+      }
+    });
   }
 }
 
-// Delete Inquiry via DELETE /api/contacts/<id>
-async function deleteContact(id) {
-  if (!confirm(`Are you sure you want to delete inquiry ID ${id}?`)) return;
+window.editTrainer = function(id, name, role, exp, spec) {
+  document.getElementById('trainerId').value = id;
+  document.getElementById('trainerName').value = name;
+  document.getElementById('trainerRole').value = role;
+  document.getElementById('trainerExperience').value = exp;
+  document.getElementById('trainerSpecialization').value = spec;
+  document.getElementById('modalTrainerTitle').textContent = 'Edit Trainer Profile';
+  document.getElementById('trainerModal').classList.add('active');
+};
 
-  try {
+window.deleteTrainer = async function(id) {
+  if (confirm('Are you sure you want to remove this trainer profile?')) {
+    const res = await apiFetch(`/api/trainers/${id}`, 'DELETE');
+    if (res.success) {
+      showToast(res.message, 'success');
+      initTrainers();
+      initStats();
+    } else {
+      showToast(res.message, 'error');
+    }
+  }
+};
+
+// 4. Admin Dashboard Logic
+async function initAdmin() {
+  const usersTbody = document.getElementById('admin-users-tbody');
+  const contactsTbody = document.getElementById('admin-contacts-tbody');
+  if (!usersTbody && !contactsTbody) return;
+
+  if (usersTbody) {
+    const res = await apiFetch('/api/users');
+    if (res.success && res.users) {
+      usersTbody.innerHTML = res.users.map(u => `
+        <tr>
+          <td>#${u.id}</td>
+          <td style="font-weight: 600;">${u.name}</td>
+          <td>${u.email}</td>
+          <td><span class="badge badge-mode">${u.course || 'Python FullStack'}</span></td>
+          <td>${u.dob || '-'}</td>
+          <td>${u.gender || '-'}</td>
+          <td>
+            <div style="display: flex; gap: 0.4rem;">
+              <button onclick="editUser(${u.id}, '${escapeHtml(u.name)}', '${escapeHtml(u.course)}')" class="btn btn-outline btn-sm">Edit</button>
+              <button onclick="deleteUser(${u.id})" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  if (contactsTbody) {
+    const res = await apiFetch('/api/contacts');
+    if (res.success && res.contacts) {
+      contactsTbody.innerHTML = res.contacts.map(c => `
+        <tr>
+          <td>#${c.id}</td>
+          <td style="font-weight: 600;">${c.name}</td>
+          <td>${c.email}</td>
+          <td>${c.message}</td>
+          <td><span class="badge ${c.status === 'Resolved' ? 'badge-mode' : 'badge-duration'}">${c.status || 'Pending'}</span></td>
+          <td>
+            <div style="display: flex; gap: 0.4rem;">
+              <button onclick="toggleInquiryStatus(${c.id}, '${c.status === 'Pending' ? 'Resolved' : 'Pending'}')" class="btn btn-secondary btn-sm">${c.status === 'Pending' ? 'Mark Resolved' : 'Mark Pending'}</button>
+              <button onclick="deleteInquiry(${c.id})" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  const editUserForm = document.getElementById('editUserForm');
+  if (editUserForm) {
+    editUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('editUserId').value;
+      const payload = {
+        name: document.getElementById('editUserName').value,
+        course: document.getElementById('editUserCourse').value
+      };
+      const res = await apiFetch(`/api/users/${id}`, 'PUT', payload);
+      if (res.success) {
+        showToast(res.message, 'success');
+        document.getElementById('editUserModal').classList.remove('active');
+        initAdmin();
+        initStats();
+      } else {
+        showToast(res.message, 'error');
+      }
+    });
+  }
+}
+
+window.editUser = function(id, name, course) {
+  document.getElementById('editUserId').value = id;
+  document.getElementById('editUserName').value = name;
+  document.getElementById('editUserCourse').value = course;
+  document.getElementById('editUserModal').classList.add('active');
+};
+
+window.deleteUser = async function(id) {
+  if (confirm('Are you sure you want to delete this student account?')) {
+    const res = await apiFetch(`/api/users/${id}`, 'DELETE');
+    if (res.success) {
+      showToast(res.message, 'success');
+      initAdmin();
+      initStats();
+    } else {
+      showToast(res.message, 'error');
+    }
+  }
+};
+
+window.toggleInquiryStatus = async function(id, newStatus) {
+  const res = await apiFetch(`/api/contacts/${id}`, 'PUT', { status: newStatus });
+  if (res.success) {
+    showToast(res.message, 'success');
+    initAdmin();
+    initStats();
+  } else {
+    showToast(res.message, 'error');
+  }
+};
+
+window.deleteInquiry = async function(id) {
+  if (confirm('Are you sure you want to delete this inquiry?')) {
     const res = await apiFetch(`/api/contacts/${id}`, 'DELETE');
     if (res.success) {
-      showNotification(res.message, 'success', 'DELETE');
-      loadContacts();
+      showToast(res.message, 'success');
+      initAdmin();
+      initStats();
+    } else {
+      showToast(res.message, 'error');
     }
-  } catch (err) {
-    showNotification(err.message, 'error', 'DELETE');
   }
-}
+};
 
-window.toggleContactStatus = toggleContactStatus;
-window.deleteContact = deleteContact;
-
-
-// --- DOM INITIALIZATION ROUTER ---
-document.addEventListener("DOMContentLoaded", () => {
-  // Pre-fill email on login page if registered
-  const loginEmailInput = document.getElementById("loginEmail");
-  if (loginEmailInput && !loginEmailInput.value) {
-    let lastEmail = localStorage.getItem("nriit_last_registered_email");
-    if (lastEmail) loginEmailInput.value = lastEmail;
-  }
-
-  // Personalize welcome message if logged in
-  const messageEl = document.getElementById("message");
-  if (messageEl) {
-    try {
-      let currentUser = JSON.parse(localStorage.getItem("nriit_current_user"));
-      if (currentUser && currentUser.name) {
-        messageEl.innerHTML = `Learning never Stops, <strong>${currentUser.name}</strong>! (<a href="#" onclick="handleLogout(event)" style="font-size:0.9rem;">Logout</a>)`;
+// 5. Auth Logic
+function initAuth() {
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        email: document.getElementById('loginEmail').value,
+        password: document.getElementById('loginPassword').value
+      };
+      const res = await apiFetch('/api/login', 'POST', payload);
+      if (res.success) {
+        showToast(res.message, 'success');
+        setTimeout(() => {
+          if (res.user && res.user.role === 'admin') {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/courses';
+          }
+        }, 1200);
+      } else {
+        showToast(res.message, 'error');
       }
-    } catch (e) {}
+    });
   }
 
-  // Page Specific Inits
-  initHomePage();
-  initCoursesPage();
-  initTrainersPage();
-  initContactPage();
-
-  // If on Admin page or containing user list table container
-  if (document.getElementById("registeredUsersList")) {
-    loadRegisteredUsersList();
+  const registerForm = document.getElementById('registerForm');
+  if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('regName').value,
+        email: document.getElementById('regEmail').value,
+        password: document.getElementById('regPassword').value,
+        course: document.getElementById('regCourse').value,
+        dob: document.getElementById('regDob').value,
+        gender: document.getElementById('regGender').value
+      };
+      const res = await apiFetch('/api/register', 'POST', payload);
+      if (res.success) {
+        showToast(res.message, 'success');
+        setTimeout(() => window.location.href = '/login', 1200);
+      } else {
+        showToast(res.message, 'error');
+      }
+    });
   }
-});
-
-function handleLogout(e) {
-  if (e) e.preventDefault();
-  localStorage.removeItem("nriit_current_user");
-  alert("You have logged out.");
-  window.location.href = "login.html";
 }
-window.handleLogout = handleLogout;
 
+// 6. Contact Form Logic
+function initContact() {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('contactName').value,
+        email: document.getElementById('contactEmail').value,
+        message: document.getElementById('contactMessage').value
+      };
+      const res = await apiFetch('/api/contacts', 'POST', payload);
+      if (res.success) {
+        showToast(res.message, 'success');
+        contactForm.reset();
+        initStats();
+      } else {
+        showToast(res.message, 'error');
+      }
+    });
+  }
+}
+
+// 7. Modal Handlers
+function initModals() {
+  const openAddCourse = document.getElementById('openAddCourseModal');
+  const courseModal = document.getElementById('courseModal');
+  const closeCourse = document.getElementById('closeCourseModal');
+
+  if (openAddCourse && courseModal) {
+    openAddCourse.addEventListener('click', () => {
+      document.getElementById('courseForm').reset();
+      document.getElementById('courseId').value = '';
+      document.getElementById('modalCourseTitle').textContent = 'Add New Course';
+      courseModal.classList.add('active');
+    });
+  }
+
+  if (closeCourse && courseModal) {
+    closeCourse.addEventListener('click', () => courseModal.classList.remove('active'));
+  }
+
+  const openAddTrainer = document.getElementById('openAddTrainerModal');
+  const trainerModal = document.getElementById('trainerModal');
+  const closeTrainer = document.getElementById('closeTrainerModal');
+
+  if (openAddTrainer && trainerModal) {
+    openAddTrainer.addEventListener('click', () => {
+      document.getElementById('trainerForm').reset();
+      document.getElementById('trainerId').value = '';
+      document.getElementById('modalTrainerTitle').textContent = 'Add New Trainer';
+      trainerModal.classList.add('active');
+    });
+  }
+
+  if (closeTrainer && trainerModal) {
+    closeTrainer.addEventListener('click', () => trainerModal.classList.remove('active'));
+  }
+
+  const closeEditUser = document.getElementById('closeEditUserModal');
+  const editUserModal = document.getElementById('editUserModal');
+  if (closeEditUser && editUserModal) {
+    closeEditUser.addEventListener('click', () => editUserModal.classList.remove('active'));
+  }
+}

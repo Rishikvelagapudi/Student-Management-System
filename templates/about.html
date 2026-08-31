@@ -1,65 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/static/style.css">
-    <title>About Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - NRIIT LMS</title>
+  <link rel="stylesheet" href="css/static/style.css">
 </head>
-
 <body>
-    <header>
-        <h1>About NRIIT Learning Management</h1>
-        <p>Learn Practice Get Placed</p>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="courses.html">Courses</a>
-            <a href="trainers.html">Trainers</a>
-            <a href="register.html">Register</a>
-            <a href="login.html">Login</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>About NRIIT</h2>
-            <p>
-                NRIIT is committed to providing quality education in Python FullStack.
-            </p>
-        </section>
-        <section>
-            <h2>Vision</h2>
-            <p>
-                Empowering Students with Practical Software Skills
-            </p>
-        </section>
-    </main>
-    <footer>
 
-        <hr>
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="image/static/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT LMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+          <li><a href="/about" class="active">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+        <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
 
-        <p>&copy; 2026 NRIIT Learning Management System</p>
+  <main class="container">
+    <div class="page-header">
+      <h1 class="page-title">About NRI Institute of Technology</h1>
+      <p class="page-subtitle">Transforming engineering education through innovation, research, and modern tech skills.</p>
+    </div>
 
-        <p>Email: info@nriit.edu</p>
+    <div class="glass-panel" style="margin-bottom: 3rem;">
+      <h2 class="card-title" style="margin-bottom: 1rem; color: var(--primary);">Our Vision & Excellence</h2>
+      <p class="card-text" style="font-size: 1.05rem; line-height: 1.8;">
+        Dr. RVR NRI Institute of Technology (Deemed to be University) is a premier higher education institution dedicated to fostering academic rigor, technical expertise, and leadership skills. Our state-of-the-art Learning Management System provides seamless online and offline access to course materials, interactive sessions, and mentor feedback.
+      </p>
+    </div>
 
-        <p>Phone: +91 9876543210</p>
+    <div class="grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="glass-panel">
+        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-cyan);">🚀 Innovation Hub</h3>
+        <p class="card-text">Cutting-edge laboratories equipped with modern hardware, cloud infrastructure, and AI tools for real-world projects.</p>
+      </div>
+      <div class="glass-panel">
+        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-amber);">🏆 Top Placement Record</h3>
+        <p class="card-text">Direct campus recruitment drives with leading global technology corporations, product companies, and MNCs.</p>
+      </div>
+      <div class="glass-panel">
+        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-emerald);">💡 Expert Faculty</h3>
+        <p class="card-text">Mentorship from experienced academicians and veteran industry architects passionate about student growth.</p>
+      </div>
+    </div>
+  </main>
 
-        <p>Follow Us:</p>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
+  </footer>
 
-        <a href="#">Facebook</a> |
-
-        <a href="#">Instagram</a> |
-
-        <a href="#">LinkedIn</a>
-
-    </footer>
-
-    <script src="js/static/script.js"></script>
+  <div id="toast-container"></div>
+  <script src="js/static/script.js"></script>
 </body>
-
 </html>
-
-
-
