@@ -33,21 +33,63 @@ Engineered with a **modular single-app Django architecture (`sms_app`)**, the sy
 
 ---
 
+## 🏗️ System Architecture & Data Flow
+
+The platform follows a clean **Model-View-Template (MVT) & REST API** hybrid architecture:
+
+```mermaid
+graph TD
+    subgraph Client ["🌐 Client Layer"]
+        UI["Web Browser / Client UI"]
+        JS["Async Fetch API (script.js)"]
+    end
+
+    subgraph Server ["⚙️ Application Layer (sms_app)"]
+        URL["URL Router (urls.py)"]
+        VIEW["View Controllers (views.py)"]
+        TPL["Template Engine (templates/)"]
+        STATIC["Static Asset Server (static/)"]
+        CONF["Config Module (config.py)"]
+    end
+
+    subgraph Data ["💾 Data Layer"]
+        ORM["Django ORM Models (models.py)"]
+        DB[(SQLite 3 Database database.db)]
+    end
+
+    UI -->|HTTP Page Requests| URL
+    JS -->|REST API Requests| URL
+    URL --> VIEW
+    CONF -.->|Config Properties| VIEW
+    VIEW -->|Query / Persist| ORM
+    ORM <-->|Read / Write| DB
+    VIEW -->|Render Context| TPL
+    TPL -->|HTML Responses| UI
+    VIEW -->|JSON Payloads| JS
+    STATIC -->|CSS / JS / Media| UI
+```
+
+### Architectural Highlights
+1. **Client Layer**: Responsive HTML5 user interface styled with CSS design tokens, driven by asynchronous JavaScript `fetch()` calls for zero-reload data updates.
+2. **Controller & Router Layer**: Centralized Django URL dispatcher (`sms_app/urls.py`) routing page views and REST endpoints to custom function-based controllers (`sms_app/views.py`).
+3. **Data Layer**: High-performance Django ORM mapping application entities (`User`, `Course`, `Trainer`, `Contact`) directly to an embedded SQLite 3 relational database (`database.db`).
+4. **Single-Package Modularity**: All domain logic, settings (`settings.py`), deployment hooks (`wsgi.py`/`asgi.py`), page templates, and static assets are self-contained within [`sms_app/`](sms_app).
+
+---
+
 ## 🛠️ Tech Stack
 
 | Domain | Technologies Used |
 | :--- | :--- |
 | **Backend Framework** | [Python 3.13](https://python.org) • [Django 6.1](https://djangoproject.com) |
 | **Database** | [SQLite 3](https://sqlite.org) (Integrated ORM with automatic migrations) |
-| **Frontend UI** | HTML5 • CSS3 (Design Tokens & Glassmorphism) • Vanilla JavaScript (Async ES6+) |
+| **Frontend UI** | HTML5 • CSS3 (Design Tokens & Classic Theme) • Vanilla JavaScript (Async ES6+) |
 | **Architecture** | Single-Package Modular App (`sms_app`) • Centralized `config.py` |
 | **Typography & Icons** | [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) • SVG Brand Assets |
 
 ---
 
-## 📂 Project Architecture
-
-The repository enforces a clean, modular single-package structure where all application components reside inside [`sms_app/`](sms_app):
+## 📂 Directory Layout
 
 ```text
 Student_management_system/
