@@ -4,74 +4,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Us - NRIIT SMS</title>
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
+<body class="bg-light">
 
-  <!-- Navigation Header -->
-  <header>
-    <div class="nav-container">
-      <a href="/" class="brand-logo">
-        <img src="/static/images/logo.png" alt="NRIIT Logo">
+  <!-- Bootstrap Navigation Header -->
+  <nav class="navbar navbar-expand-lg sticky-top custom-navbar bg-white border-bottom shadow-sm">
+    <div class="container">
+      <a href="/" class="navbar-brand d-flex align-items-center gap-2">
+        <img src="/static/images/logo.png" alt="NRIIT Logo" style="height: 40px;">
         <div class="brand-text">
-          <span class="brand-title">NRIIT SMS</span>
-          <span class="brand-subtitle">Deemed to be University</span>
+          <span class="brand-title d-block fw-bold" style="color: var(--primary);">NRIIT SMS</span>
+          <span class="brand-subtitle d-block text-muted" style="font-size: 0.75rem;">Deemed to be University</span>
         </div>
       </a>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/students">Students</a></li>
-          <li><a href="/courses">Courses</a></li>
-          <li><a href="/trainers">Trainers</a></li>
-          <li><a href="/about" class="active">About</a></li>
-          <li><a href="/contact">Contact</a></li>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/students">Students</a></li>
+          <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="/trainers">Trainers</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
         </ul>
-      </nav>
-      <div class="nav-actions">
-        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
-        <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+        <div class="nav-actions d-flex gap-2">
+          <a href="/login" class="btn btn-outline-primary btn-sm">Login</a>
+          <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <main class="container">
-    <div class="page-header">
-      <h1 class="page-title">About NRI Institute of Technology</h1>
-      <p class="page-subtitle">Transforming engineering education through innovation, research, and modern tech skills.</p>
+  <main class="container my-4">
+    <div class="text-center py-3 mb-4">
+      <h1 class="h2 fw-bold text-dark mb-2">About NRI Institute of Technology</h1>
+      <p class="text-muted">Transforming engineering education through innovation, research, and modern tech skills.</p>
     </div>
 
-    <div class="glass-panel" style="margin-bottom: 3rem;">
-      <h2 class="card-title" style="margin-bottom: 1rem; color: var(--primary);">Our Vision & Excellence</h2>
-      <p class="card-text" style="font-size: 1.05rem; line-height: 1.8;">
+    <div class="card border-0 shadow-sm p-4 mb-4 rounded-4 bg-white">
+      <h2 class="h4 fw-bold text-primary mb-3">Our Vision & Excellence</h2>
+      <p class="lead text-secondary fs-6 mb-0">
         Dr. RVR NRI Institute of Technology (Deemed to be University) is a premier higher education institution dedicated to fostering academic rigor, technical expertise, and leadership skills. Our state-of-the-art Student Management System provides seamless online and offline access to course materials, interactive sessions, and mentor feedback.
       </p>
     </div>
 
-    <div class="grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-      <div class="glass-panel">
-        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-cyan);">🚀 Innovation Hub</h3>
-        <p class="card-text">Cutting-edge laboratories equipped with modern hardware, cloud infrastructure, and AI tools for real-world projects.</p>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 rounded-4 bg-white h-100">
+          <div class="fs-2 text-info mb-2"><i class="bi bi-rocket-takeoff"></i></div>
+          <h3 class="h5 fw-bold text-dark mb-2">Innovation Hub</h3>
+          <p class="text-muted small mb-0">Cutting-edge laboratories equipped with modern hardware, cloud infrastructure, and AI tools for real-world projects.</p>
+        </div>
       </div>
-      <div class="glass-panel">
-        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-amber);">🏆 Top Placement Record</h3>
-        <p class="card-text">Direct campus recruitment drives with leading global technology corporations, product companies, and MNCs.</p>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 rounded-4 bg-white h-100">
+          <div class="fs-2 text-warning mb-2"><i class="bi bi-trophy"></i></div>
+          <h3 class="h5 fw-bold text-dark mb-2">Top Placement Record</h3>
+          <p class="text-muted small mb-0">Direct campus recruitment drives with leading global technology corporations, product companies, and MNCs.</p>
+        </div>
       </div>
-      <div class="glass-panel">
-        <h3 class="card-title" style="margin-bottom: 0.75rem; color: var(--accent-emerald);">💡 Expert Faculty</h3>
-        <p class="card-text">Mentorship from experienced academicians and veteran industry architects passionate about student growth.</p>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4 rounded-4 bg-white h-100">
+          <div class="fs-2 text-success mb-2"><i class="bi bi-award"></i></div>
+          <h3 class="h5 fw-bold text-dark mb-2">Expert Faculty</h3>
+          <p class="text-muted small mb-0">Mentorship from experienced academicians and veteran industry architects passionate about student growth.</p>
+        </div>
       </div>
     </div>
   </main>
 
   <!-- Footer -->
-  <footer>
+  <footer class="py-4 mt-5 border-top bg-white text-center text-muted">
     <div class="container">
-      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+      <p class="mb-0">© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
     </div>
   </footer>
 
   <div id="toast-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/static/js/script.js"></script>
 </body>
 </html>

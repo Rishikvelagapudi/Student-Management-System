@@ -4,90 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - NRIIT SMS</title>
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
+<body class="bg-light">
 
-  <!-- Navigation Header -->
-  <header>
-    <div class="nav-container">
-      <a href="/" class="brand-logo">
-        <img src="/static/images/logo.png" alt="NRIIT Logo">
+  <!-- Bootstrap Navigation Header -->
+  <nav class="navbar navbar-expand-lg sticky-top custom-navbar bg-white border-bottom shadow-sm">
+    <div class="container">
+      <a href="/" class="navbar-brand d-flex align-items-center gap-2">
+        <img src="/static/images/logo.png" alt="NRIIT Logo" style="height: 40px;">
         <div class="brand-text">
-          <span class="brand-title">NRIIT SMS</span>
-          <span class="brand-subtitle">Deemed to be University</span>
+          <span class="brand-title d-block fw-bold" style="color: var(--primary);">NRIIT SMS</span>
+          <span class="brand-subtitle d-block text-muted" style="font-size: 0.75rem;">Deemed to be University</span>
         </div>
       </a>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/students">Students</a></li>
-          <li><a href="/courses">Courses</a></li>
-          <li><a href="/trainers">Trainers</a></li>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/register">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="/trainers">Trainers</a></li>
         </ul>
-      </nav>
-      <div class="nav-actions">
-        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+        <div class="nav-actions d-flex gap-2">
+          <a href="/login" class="btn btn-outline-primary btn-sm">Login</a>
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <main class="auth-wrapper">
-    <div class="auth-card" style="max-width: 500px;">
-      <div class="auth-header">
-        <img src="/static/images/logo.png" alt="NRIIT Logo" class="auth-logo">
-        <h2 class="page-title" style="font-size: 1.75rem;">Create Account</h2>
-        <p class="page-subtitle" style="font-size: 0.9rem;">Join NRIIT SMS to start learning today.</p>
-      </div>
-
-      <!-- Inline Alert Box for Registration Feedback -->
-      <div id="register-alert" class="glass-panel" style="display: none; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.88rem; border-radius: 8px;"></div>
-
-      <form id="registerForm" onsubmit="submitRegister(event); return false;">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="regName" class="form-input" placeholder="Your Full Name" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" id="regEmail" class="form-input" placeholder="your.email@nriit.edu" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" id="regPassword" class="form-input" placeholder="Create a password" required>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Select Preferred Course</label>
-          <select id="regCourse" class="form-select">
-            <option value="Python FullStack Development">Python FullStack Development</option>
-            <option value="Java FullStack Development">Java FullStack Development</option>
-            <option value="Data Science & AI">Data Science & AI</option>
-          </select>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div class="form-group">
-            <label class="form-label">Date of Birth</label>
-            <input type="date" id="regDob" class="form-input">
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-6">
+        <div class="card border-0 shadow-lg rounded-4 p-4">
+          <div class="text-center mb-4">
+            <img src="/static/images/logo.png" alt="NRIIT Logo" class="mb-3" style="max-height: 70px;">
+            <h2 class="h4 fw-bold text-dark mb-1">Create Account</h2>
+            <p class="text-muted small">Join NRIIT SMS to start learning today.</p>
           </div>
-          <div class="form-group">
-            <label class="form-label">Gender</label>
-            <select id="regGender" class="form-select">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+
+          <!-- Inline Alert Box for Registration Feedback -->
+          <div id="register-alert" class="alert alert-info py-2 px-3 small" style="display: none;"></div>
+
+          <form id="registerForm" onsubmit="submitRegister(event); return false;">
+            <div class="mb-3">
+              <label for="regName" class="form-label fw-semibold">Full Name</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                <input type="text" id="regName" class="form-control" placeholder="Your Full Name" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="regEmail" class="form-label fw-semibold">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                <input type="email" id="regEmail" class="form-control" placeholder="your.email@nriit.edu" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="regPassword" class="form-label fw-semibold">Password</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                <input type="password" id="regPassword" class="form-control" placeholder="Create a password" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="regCourse" class="form-label fw-semibold">Select Preferred Course</label>
+              <select id="regCourse" class="form-select">
+                <option value="Python FullStack Development">Python FullStack Development</option>
+                <option value="Java FullStack Development">Java FullStack Development</option>
+                <option value="Data Science & AI">Data Science & AI</option>
+              </select>
+            </div>
+            <div class="row g-2 mb-4">
+              <div class="col-6">
+                <label for="regDob" class="form-label fw-semibold">Date of Birth</label>
+                <input type="date" id="regDob" class="form-control">
+              </div>
+              <div class="col-6">
+                <label for="regGender" class="form-label fw-semibold">Gender</label>
+                <select id="regGender" class="form-select">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <button type="button" onclick="submitRegister(event)" class="btn btn-primary w-100 btn-lg shadow-sm">
+              Create Account <i class="bi bi-person-plus"></i>
+            </button>
+          </form>
+
+          <div class="text-center mt-4 pt-3 border-top text-muted small">
+            Already registered? <a href="/login" class="fw-semibold text-decoration-none">Login here</a>
           </div>
         </div>
-        <button type="button" onclick="submitRegister(event)" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Account →</button>
-      </form>
-
-      <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.88rem;">
-        Already registered? <a href="/login" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Login here</a>
       </div>
     </div>
   </main>
 
   <div id="toast-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/static/js/script.js"></script>
 </body>
 </html>

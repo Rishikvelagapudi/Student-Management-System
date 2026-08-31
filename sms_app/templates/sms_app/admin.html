@@ -4,69 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - NRIIT SMS</title>
+  <!-- Bootstrap 5 CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/static/css/style.css">
 </head>
-<body>
+<body class="bg-light">
 
-  <!-- Navigation Header -->
-  <header>
-    <div class="nav-container">
-      <a href="/" class="brand-logo">
-        <img src="/static/images/logo.png" alt="NRIIT Logo">
+  <!-- Bootstrap Navigation Header -->
+  <nav class="navbar navbar-expand-lg sticky-top custom-navbar bg-white border-bottom shadow-sm">
+    <div class="container">
+      <a href="/" class="navbar-brand d-flex align-items-center gap-2">
+        <img src="/static/images/logo.png" alt="NRIIT Logo" style="height: 40px;">
         <div class="brand-text">
-          <span class="brand-title">NRIIT Admin</span>
-          <span class="brand-subtitle">Management Control Center</span>
+          <span class="brand-title d-block fw-bold" style="color: var(--primary);">NRIIT Admin</span>
+          <span class="brand-subtitle d-block text-muted" style="font-size: 0.75rem;">Control Center</span>
         </div>
       </a>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/students">Students</a></li>
-          <li><a href="/courses">Courses</a></li>
-          <li><a href="/trainers">Trainers</a></li>
-          <li><a href="/admin" class="active">Admin Dashboard</a></li>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-semibold">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/students">Students</a></li>
+          <li class="nav-item"><a class="nav-link" href="/courses">Courses</a></li>
+          <li class="nav-item"><a class="nav-link" href="/trainers">Trainers</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/admin">Admin Dashboard</a></li>
         </ul>
-      </nav>
-      <div class="nav-actions">
-        <a href="/login" class="btn btn-secondary btn-sm">Logout</a>
+        <div class="nav-actions d-flex gap-2">
+          <a href="/login" class="btn btn-outline-danger btn-sm">Logout</a>
+        </div>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <main class="container">
-    <div class="page-header">
-      <h1 class="page-title">System Overview & Management</h1>
-      <p class="page-subtitle">Monitor enrollments, manage student accounts, and process student inquiries.</p>
+  <main class="container my-4">
+    <div class="text-center py-3 mb-4">
+      <h1 class="h2 fw-bold text-dark mb-2">System Overview & Management</h1>
+      <p class="text-muted">Monitor enrollments, manage student accounts, and process student inquiries.</p>
     </div>
 
     <!-- Admin Metric Cards -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-number" id="admin-stat-students">0</div>
-        <div class="stat-label">Students Enrolled</div>
+    <section class="row g-4 mb-4">
+      <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-0 shadow-sm p-3 rounded-4 bg-white">
+          <div class="display-6 fw-bold text-primary" id="admin-stat-students">0</div>
+          <div class="text-muted small fw-semibold mt-1">Students Enrolled</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="admin-stat-courses">0</div>
-        <div class="stat-label">Active Courses</div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-0 shadow-sm p-3 rounded-4 bg-white">
+          <div class="display-6 fw-bold text-success" id="admin-stat-courses">0</div>
+          <div class="text-muted small fw-semibold mt-1">Active Courses</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="admin-stat-trainers">0</div>
-        <div class="stat-label">Faculty Trainers</div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-0 shadow-sm p-3 rounded-4 bg-white">
+          <div class="display-6 fw-bold text-info" id="admin-stat-trainers">0</div>
+          <div class="text-muted small fw-semibold mt-1">Faculty Trainers</div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-number" id="admin-stat-inquiries">0</div>
-        <div class="stat-label">Pending Inquiries</div>
+      <div class="col-md-3 col-sm-6">
+        <div class="card text-center border-0 shadow-sm p-3 rounded-4 bg-white">
+          <div class="display-6 fw-bold text-warning" id="admin-stat-inquiries">0</div>
+          <div class="text-muted small fw-semibold mt-1">Pending Inquiries</div>
+        </div>
       </div>
     </section>
 
     <!-- Students Directory Table -->
-    <div class="glass-panel" style="margin-bottom: 2.5rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 class="card-title">Enrolled Students Directory</h2>
+    <div class="card border-0 shadow-sm p-4 mb-4 rounded-4 bg-white">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold mb-0 text-dark">Enrolled Students Directory</h2>
       </div>
       <div class="table-responsive">
-        <table>
-          <thead>
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
             <tr>
               <th>ID</th>
               <th>Name</th>
@@ -85,13 +99,13 @@
     </div>
 
     <!-- Inquiries Directory Table -->
-    <div class="glass-panel">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 class="card-title">Student Inquiries & Tickets</h2>
+    <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold mb-0 text-dark">Student Inquiries & Tickets</h2>
       </div>
       <div class="table-responsive">
-        <table>
-          <thead>
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
             <tr>
               <th>ID</th>
               <th>Student Name</th>
@@ -112,18 +126,18 @@
   <!-- Edit User Modal -->
   <div id="editUserModal" class="modal-overlay">
     <div class="modal-card">
-      <h2 class="card-title" style="margin-bottom: 1.5rem;">Edit Student Account</h2>
+      <h2 class="h5 fw-bold mb-3">Edit Student Account</h2>
       <form id="editUserForm">
         <input type="hidden" id="editUserId">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="editUserName" class="form-input" required>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input type="text" id="editUserName" class="form-control" required>
         </div>
-        <div class="form-group">
-          <label class="form-label">Enrolled Course</label>
-          <input type="text" id="editUserCourse" class="form-input" required>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Enrolled Course</label>
+          <input type="text" id="editUserCourse" class="form-control" required>
         </div>
-        <div style="display: flex; gap: 0.85rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <div class="d-flex justify-content-end gap-2">
           <button type="button" id="closeEditUserModal" class="btn btn-secondary">Cancel</button>
           <button type="submit" class="btn btn-primary">Update Account</button>
         </div>
@@ -132,13 +146,14 @@
   </div>
 
   <!-- Footer -->
-  <footer>
+  <footer class="py-4 mt-5 border-top bg-white text-center text-muted">
     <div class="container">
-      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+      <p class="mb-0">© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
     </div>
   </footer>
 
   <div id="toast-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/static/js/script.js"></script>
 </body>
 </html>

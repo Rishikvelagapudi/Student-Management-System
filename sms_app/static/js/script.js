@@ -117,34 +117,34 @@ function renderStudents(students) {
   if (!container) return;
 
   if (!students || students.length === 0) {
-    container.innerHTML = `<div class="glass-panel" style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">No registered students found matching your criteria.</div>`;
+    container.innerHTML = `<div class="col-12 text-center text-muted p-4 border rounded-4 bg-white">No registered students found matching your criteria.</div>`;
     return;
   }
 
   container.innerHTML = students.map(s => `
-    <div class="card">
-      <div class="card-header">
-        <div style="display: flex; align-items: center; gap: 0.85rem;">
-          <div class="avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">${(s.name || 'S').charAt(0)}</div>
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 border-0 shadow-sm rounded-4 bg-white">
+        <div class="card-header bg-transparent border-0 pt-3 px-3 d-flex align-items-center gap-3">
+          <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">${(s.name || 'S').charAt(0)}</div>
           <div>
-            <h3 class="card-title">${s.name}</h3>
-            <p style="font-size: 0.84rem; color: var(--text-secondary);">${s.email}</p>
+            <h3 class="h6 fw-bold mb-0 text-dark">${escapeHtml(s.name)}</h3>
+            <p class="small text-muted mb-0">${escapeHtml(s.email)}</p>
           </div>
         </div>
-      </div>
-      <div class="card-body">
-        <p class="card-text" style="margin-bottom: 0.5rem;">
-          <strong>Enrolled Track:</strong>
-          <span class="badge badge-mode" style="margin-left: 0.25rem;">${s.course || 'Python FullStack'}</span>
-        </p>
-        <div class="card-topics" style="margin-top: 0.65rem;">
-          <div><strong>DOB:</strong> ${s.dob || 'N/A'} | <strong>Gender:</strong> ${s.gender || 'N/A'}</div>
-          ${s.created_at ? `<div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Registered: ${s.created_at.substring(0, 10)}</div>` : ''}
+        <div class="card-body px-3 py-2">
+          <p class="small mb-2">
+            <strong>Enrolled Track:</strong>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle ms-1">${escapeHtml(s.course || 'Python FullStack')}</span>
+          </p>
+          <div class="small text-muted bg-light p-2 rounded-3">
+            <div><strong>DOB:</strong> ${escapeHtml(s.dob || 'N/A')} | <strong>Gender:</strong> ${escapeHtml(s.gender || 'N/A')}</div>
+            ${s.created_at ? `<div class="xsmall mt-1">Registered: ${escapeHtml(s.created_at.substring(0, 10))}</div>` : ''}
+          </div>
         </div>
-      </div>
-      <div class="card-footer" style="justify-content: space-between;">
-        <span style="font-size: 0.82rem; font-weight: 600; color: var(--accent-cyan);">Status: Active</span>
-        <button onclick="window.location.href='/courses'" class="btn btn-outline btn-sm">View Track →</button>
+        <div class="card-footer bg-transparent border-0 pb-3 px-3 d-flex justify-content-between align-items-center">
+          <span class="badge bg-success-subtle text-success border border-success-subtle">Active Student</span>
+          <button onclick="window.location.href='/courses'" class="btn btn-outline-primary btn-sm">View Track →</button>
+        </div>
       </div>
     </div>
   `).join('');
@@ -158,25 +158,27 @@ async function initCourses() {
   const res = await apiFetch('/api/courses');
   if (res.success && res.courses) {
     container.innerHTML = res.courses.map(c => `
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">${c.title}</h3>
-          <span class="badge badge-duration">${c.duration || '3 Months'}</span>
-        </div>
-        <div class="card-body">
-          <p class="card-text"><strong>Mode:</strong> <span class="badge badge-mode">${c.mode || 'Online'}</span></p>
-          <div class="card-topics">
-            <strong>Topics:</strong> ${c.topics || 'N/A'}
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 bg-white">
+          <div class="card-header bg-transparent border-0 pt-3 px-3 d-flex justify-content-between align-items-center">
+            <h3 class="h6 fw-bold mb-0 text-dark">${escapeHtml(c.title)}</h3>
+            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">${escapeHtml(c.duration || '3 Months')}</span>
           </div>
-        </div>
-        <div class="card-footer">
-          <div class="trainer-info">
-            <div class="avatar">${(c.trainer || 'Faculty').charAt(0)}</div>
-            <span style="font-size: 0.88rem; font-weight: 600;">${c.trainer || 'Faculty'}</span>
+          <div class="card-body px-3 py-2">
+            <p class="small mb-2"><strong>Mode:</strong> <span class="badge bg-info-subtle text-info border border-info-subtle ms-1">${escapeHtml(c.mode || 'Online')}</span></p>
+            <div class="small text-muted bg-light p-2 rounded-3">
+              <strong>Topics:</strong> ${escapeHtml(c.topics || 'N/A')}
+            </div>
           </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <button onclick="editCourse(${c.id}, '${escapeHtml(c.title)}', '${escapeHtml(c.duration)}', '${escapeHtml(c.mode)}', '${escapeHtml(c.topics)}', '${escapeHtml(c.trainer)}')" class="btn btn-outline btn-sm">Edit</button>
-            <button onclick="deleteCourse(${c.id})" class="btn btn-danger btn-sm">Delete</button>
+          <div class="card-footer bg-transparent border-0 pb-3 px-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px;">${(c.trainer || 'F').charAt(0)}</div>
+              <span class="small fw-semibold text-dark">${escapeHtml(c.trainer || 'Faculty')}</span>
+            </div>
+            <div class="d-flex gap-1">
+              <button onclick="editCourse(${c.id}, '${escapeHtml(c.title)}', '${escapeHtml(c.duration)}', '${escapeHtml(c.mode)}', '${escapeHtml(c.topics)}', '${escapeHtml(c.trainer)}')" class="btn btn-outline-primary btn-sm">Edit</button>
+              <button onclick="deleteCourse(${c.id})" class="btn btn-outline-danger btn-sm">Delete</button>
+            </div>
           </div>
         </div>
       </div>
@@ -248,25 +250,27 @@ async function initTrainers() {
   const res = await apiFetch('/api/trainers');
   if (res.success && res.trainers) {
     container.innerHTML = res.trainers.map(t => `
-      <div class="card">
-        <div class="card-header">
-          <div style="display: flex; align-items: center; gap: 0.85rem;">
-            <div class="avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">${(t.name || 'T').charAt(0)}</div>
-            <div>
-              <h3 class="card-title">${t.name}</h3>
-              <p style="font-size: 0.82rem; color: var(--accent-cyan); font-weight: 600;">${t.role || 'Instructor'}</p>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 bg-white">
+          <div class="card-header bg-transparent border-0 pt-3 px-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+              <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">${(t.name || 'T').charAt(0)}</div>
+              <div>
+                <h3 class="h6 fw-bold mb-0 text-dark">${escapeHtml(t.name)}</h3>
+                <p class="small text-primary fw-semibold mb-0">${escapeHtml(t.role || 'Instructor')}</p>
+              </div>
+            </div>
+            <span class="badge bg-success-subtle text-success border border-success-subtle">${escapeHtml(t.experience || '3+ yrs')}</span>
+          </div>
+          <div class="card-body px-3 py-2">
+            <div class="small text-muted bg-light p-2 rounded-3">
+              <strong>Specialization:</strong> ${escapeHtml(t.specialization || 'FullStack Tech')}
             </div>
           </div>
-          <span class="badge badge-mode">${t.experience || '3+ yrs'}</span>
-        </div>
-        <div class="card-body">
-          <div class="card-topics" style="margin-top: 0.5rem;">
-            <strong>Specialization:</strong> ${t.specialization || 'FullStack Tech'}
+          <div class="card-footer bg-transparent border-0 pb-3 px-3 d-flex justify-content-end gap-1">
+            <button onclick="editTrainer(${t.id}, '${escapeHtml(t.name)}', '${escapeHtml(t.role)}', '${escapeHtml(t.experience)}', '${escapeHtml(t.specialization)}')" class="btn btn-outline-primary btn-sm">Edit</button>
+            <button onclick="deleteTrainer(${t.id})" class="btn btn-outline-danger btn-sm">Remove</button>
           </div>
-        </div>
-        <div class="card-footer" style="justify-content: flex-end; gap: 0.5rem;">
-          <button onclick="editTrainer(${t.id}, '${escapeHtml(t.name)}', '${escapeHtml(t.role)}', '${escapeHtml(t.experience)}', '${escapeHtml(t.specialization)}')" class="btn btn-outline btn-sm">Edit</button>
-          <button onclick="deleteTrainer(${t.id})" class="btn btn-danger btn-sm">Remove</button>
         </div>
       </div>
     `).join('');
