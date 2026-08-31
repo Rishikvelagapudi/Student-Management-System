@@ -95,14 +95,15 @@ graph TD
 Student_management_system/
 ├── sms_app/                      # Modular Application Directory
 │   ├── templates/                # HTML Page Templates
-│   │   ├── index.html            # Landing / Home Page
-│   │   ├── courses.html          # Course Directory & Modals
-│   │   ├── trainers.html         # Faculty Directory & Modals
-│   │   ├── admin.html            # Admin Management Dashboard
-│   │   ├── contact.html          # Student Inquiry Portal
-│   │   ├── about.html            # University Overview
-│   │   ├── login.html            # Student & Admin Login
-│   │   └── register.html         # Student Registration
+│   │   └── sms_app/              # Namespaced Template Subdirectory
+│   │       ├── index.html        # Landing / Home Page
+│   │       ├── courses.html      # Course Directory & Modals
+│   │       ├── trainers.html     # Faculty Directory & Modals
+│   │       ├── admin.html        # Admin Management Dashboard
+│   │       ├── contact.html      # Student Inquiry Portal
+│   │       ├── about.html        # University Overview
+│   │       ├── login.html        # Student & Admin Login
+│   │       └── register.html     # Student Registration
 │   ├── static/                   # Static Assets
 │   │   ├── css/                  # Design System Stylesheets
 │   │   ├── js/                   # Interactive Scripting & API Fetchers

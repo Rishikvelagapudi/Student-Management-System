@@ -61,9 +61,9 @@ jobs:
         run: |
           mkdir -p dist
           # Copy HTML templates to dist root and templates subfolder for compatibility
-          cp sms_app/templates/*.html dist/
+          cp sms_app/templates/sms_app/*.html dist/
           mkdir -p dist/templates
-          cp sms_app/templates/*.html dist/templates/
+          cp sms_app/templates/sms_app/*.html dist/templates/
           # Copy modular static assets from sms_app/static
           if [ -d "sms_app/static" ]; then
             cp -r sms_app/static/* dist/

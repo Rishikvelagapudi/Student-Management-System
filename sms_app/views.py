@@ -19,28 +19,28 @@ def get_request_data(request):
 # ==============================================================================
 
 def home(request):
-    return render(request, 'index.html')
+    return render(request, 'sms_app/index.html')
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'sms_app/about.html')
 
 def courses_page(request):
-    return render(request, 'courses.html')
+    return render(request, 'sms_app/courses.html')
 
 def trainers_page(request):
-    return render(request, 'trainers.html')
+    return render(request, 'sms_app/trainers.html')
 
 def register_page(request):
-    return render(request, 'register.html')
+    return render(request, 'sms_app/register.html')
 
 def login_page(request):
-    return render(request, 'login.html')
+    return render(request, 'sms_app/login.html')
 
 def admin_page(request):
-    return render(request, 'admin.html')
+    return render(request, 'sms_app/admin.html')
 
 def contact_page(request):
-    return render(request, 'contact.html')
+    return render(request, 'sms_app/contact.html')
 
 
 # ==============================================================================
