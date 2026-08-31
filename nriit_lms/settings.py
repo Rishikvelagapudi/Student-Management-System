@@ -1,13 +1,18 @@
 import os
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-nriit-lms-key-for-development'
+# Ensure project root is in sys.path for config import
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 
-DEBUG = True
+import config
 
-ALLOWED_HOSTS = ['*']
+SECRET_KEY = config.SECRET_KEY
+DEBUG = config.DEBUG
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 INSTALLED_APPS = [
     'django.contrib.admin',
