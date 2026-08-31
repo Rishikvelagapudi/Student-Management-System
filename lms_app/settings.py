@@ -34,7 +34,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'nriit_lms.urls'
+ROOT_URLCONF = 'lms_app.urls'
 
 TEMPLATES = [
     {
@@ -52,7 +52,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'nriit_lms.wsgi.application'
+WSGI_APPLICATION = 'lms_app.wsgi.application'
 
 DATABASES = {
     'default': {
