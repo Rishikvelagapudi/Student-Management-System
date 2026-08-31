@@ -498,12 +498,8 @@ window.submitLogin = async function(e) {
     showLoginAlert('✅ Welcome to SMS portal!', 'success');
     showToast('Welcome to SMS portal!', 'success');
     setTimeout(() => {
-      if (res.user.role === 'admin') {
-        window.location.href = '/admin';
-      } else {
-        window.location.href = '/home';
-      }
-    }, 800);
+      window.location.href = '/home';
+    }, 600);
   } else {
     const errorMsg = res.message || 'Wrong credentials';
     showLoginAlert(`❌ ${errorMsg}`, 'error');
