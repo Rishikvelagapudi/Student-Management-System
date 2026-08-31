@@ -1,7 +1,10 @@
-name: Deploy to GitHub Pages
+name: Django CI & Deploy
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -16,35 +19,60 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Django System Check
+        run: |
+          python manage.py check
+
+      - name: Run Migrations Check
+        run: |
+          python manage.py migrate --check
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup static site artifact
+      - name: Prepare Static Web Artifacts
         run: |
           mkdir -p dist
-          # Copy HTML templates to root of dist
-          cp templates/*.html dist/
-          # Keep templates subfolder for relative path compatibility
+          # Copy HTML templates to dist root and templates subfolder for compatibility
+          cp sms_app/templates/*.html dist/
           mkdir -p dist/templates
-          cp templates/*.html dist/templates/
-          # Copy static directories
-          cp -r css dist/
-          cp -r js dist/
-          cp -r image dist/
-          cp -r images dist/
-          if [ -d "audio" ]; then cp -r audio dist/; fi
-          if [ -d "video" ]; then cp -r video dist/; fi
+          cp sms_app/templates/*.html dist/templates/
+          # Copy modular static assets from sms_app/static
+          if [ -d "sms_app/static" ]; then
+            cp -r sms_app/static/* dist/
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'dist'
