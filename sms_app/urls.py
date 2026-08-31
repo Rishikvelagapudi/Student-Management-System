@@ -4,9 +4,11 @@ from django.views.static import serve
 from . import views
 
 urlpatterns = [
-    # Page routes
-    path('', views.home, name='home'),
-    path('home', views.home),
+    # Page routes (Login is default first page)
+    path('', views.login_page, name='login_first'),
+    path('login', views.login_page, name='login'),
+    path('login.html', views.login_page),
+    path('home', views.home, name='home'),
     path('home.html', views.home),
     path('index', views.home),
     path('index.html', views.home),

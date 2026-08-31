@@ -438,54 +438,117 @@ window.deleteInquiry = async function(id) {
   }
 };
 
-// 5. Auth Logic
+// 5. Auth & Navigation Logic
 function initAuth() {
+  const currentUser = JSON.parse(localStorage.getItem('sms_user') || 'null');
+  const isLoggedIn = localStorage.getItem('sms_logged_in') === 'true';
+
+  const currentPath = window.location.pathname.toLowerCase();
+
+  // Auth Guard: If not logged in and accessing internal app pages, redirect to login
+  const isPublicPage = currentPath === '/' || currentPath === '/login' || currentPath === '/login.html' || currentPath === '/register' || currentPath === '/register.html';
+
+  if (!isLoggedIn && !isPublicPage) {
+    showToast('Please sign in to access the Student Management System portal.', 'info');
+    setTimeout(() => { window.location.href = '/login'; }, 800);
+    return;
+  }
+
+  // If already logged in and visiting login/root page, enter the app directly!
+  if (isLoggedIn && (currentPath === '/' || currentPath === '/login' || currentPath === '/login.html')) {
+    window.location.href = (currentUser && currentUser.role === 'admin') ? '/admin' : '/home';
+    return;
+  }
+
+  // Update Dynamic Navigation UI
+  updateNavAuthUI(currentUser, isLoggedIn);
+
+  // Handle Login Form
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const payload = {
-        email: document.getElementById('loginEmail').value,
-        password: document.getElementById('loginPassword').value
-      };
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showToast('Please enter both email and password.', 'error');
+        return;
+      }
+
+      const payload = { email, password };
       const res = await apiFetch('/api/login', 'POST', payload);
-      if (res.success) {
-        showToast(res.message, 'success');
+      if (res.success && res.user) {
+        localStorage.setItem('sms_user', JSON.stringify(res.user));
+        localStorage.setItem('sms_logged_in', 'true');
+        showToast(res.message || `Welcome back, ${res.user.name}! Entering app...`, 'success');
         setTimeout(() => {
-          if (res.user && res.user.role === 'admin') {
+          if (res.user.role === 'admin') {
             window.location.href = '/admin';
           } else {
-            window.location.href = '/courses';
+            window.location.href = '/home';
           }
-        }, 1200);
+        }, 1000);
       } else {
-        showToast(res.message, 'error');
+        showToast(res.message || 'Invalid email or password. Please try again.', 'error');
       }
     });
   }
 
+  // Handle Registration Form
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const payload = {
-        name: document.getElementById('regName').value,
-        email: document.getElementById('regEmail').value,
-        password: document.getElementById('regPassword').value,
-        course: document.getElementById('regCourse').value,
-        dob: document.getElementById('regDob').value,
-        gender: document.getElementById('regGender').value
-      };
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const course = document.getElementById('regCourse').value;
+      const dob = document.getElementById('regDob').value;
+      const gender = document.getElementById('regGender').value;
+
+      if (!name || !email || !password) {
+        showToast('Name, Email, and Password are required fields.', 'error');
+        return;
+      }
+
+      const payload = { name, email, password, course, dob, gender };
       const res = await apiFetch('/api/register', 'POST', payload);
       if (res.success) {
-        showToast(res.message, 'success');
-        setTimeout(() => window.location.href = '/login', 1200);
+        showToast(res.message || 'Registration successful! You can now log in.', 'success');
+        setTimeout(() => { window.location.href = '/login'; }, 1200);
       } else {
-        showToast(res.message, 'error');
+        showToast(res.message || 'Registration failed.', 'error');
       }
     });
   }
 }
+
+function updateNavAuthUI(user, isLoggedIn) {
+  const navActions = document.querySelector('.nav-actions');
+  if (!navActions) return;
+
+  if (isLoggedIn && user) {
+    navActions.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-main);">👋 ${escapeHtml(user.name)}</span>
+        <button onclick="logoutUser()" class="btn btn-secondary btn-sm">Logout</button>
+      </div>
+    `;
+  } else {
+    navActions.innerHTML = `
+      <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+      <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+    `;
+  }
+}
+
+window.logoutUser = function() {
+  localStorage.removeItem('sms_user');
+  localStorage.removeItem('sms_logged_in');
+  showToast('Logged out successfully.', 'info');
+  setTimeout(() => { window.location.href = '/login'; }, 800);
+};
 
 // 6. Contact Form Logic
 function initContact() {
