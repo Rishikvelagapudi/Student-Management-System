@@ -19,7 +19,7 @@ def get_request_data(request):
 # ==============================================================================
 
 def home(request):
-    return render(request, 'sms_app/index.html')
+    return render(request, 'sms_app/home.html')
 
 def students_page(request):
     return render(request, 'sms_app/students.html')

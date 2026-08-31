@@ -6,6 +6,8 @@ from . import views
 urlpatterns = [
     # Page routes
     path('', views.home, name='home'),
+    path('home', views.home),
+    path('home.html', views.home),
     path('index', views.home),
     path('index.html', views.home),
     path('students', views.students_page, name='students'),

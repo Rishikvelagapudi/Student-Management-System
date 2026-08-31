@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - NRIIT SMS</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header>
+    <div class="nav-container">
+      <a href="/" class="brand-logo">
+        <img src="/static/images/logo.png" alt="NRIIT Logo">
+        <div class="brand-text">
+          <span class="brand-title">NRIIT SMS</span>
+          <span class="brand-subtitle">Deemed to be University</span>
+        </div>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="/" class="active">Home</a></li>
+          <li><a href="/students">Students</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/trainers">Trainers</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions">
+        <a href="/login" class="btn btn-secondary btn-sm">Login</a>
+        <a href="/register" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="container">
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Empowering Next-Gen <span>Tech Leaders</span> & Engineers
+        </h1>
+        <p class="hero-description">
+          Welcome to NRI Institute of Technology SMS. Discover industry-aligned FullStack, AI, and Data Science programs taught by elite industry experts.
+        </p>
+        <div class="hero-actions">
+          <a href="/courses" class="btn btn-primary">Explore Courses →</a>
+          <a href="/students" class="btn btn-outline">View Students</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <div class="hero-image-card">
+          <img src="/static/images/logo.png" alt="NRIIT Learning Portal">
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Statistics Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-students">0</div>
+        <div class="stat-label">Students Enrolled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-courses">0</div>
+        <div class="stat-label">Courses Offered</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-trainers">0</div>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-inquiries">0</div>
+        <div class="stat-label">Active Inquiries</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 NRI Institute of Technology (Deemed to be University). All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+  <script src="/static/js/script.js"></script>
+</body>
+</html>

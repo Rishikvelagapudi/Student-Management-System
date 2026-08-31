@@ -96,7 +96,9 @@ Student_management_system/
 ├── sms_app/                      # Modular Application Directory
 │   ├── templates/                # HTML Page Templates
 │   │   └── sms_app/              # Namespaced Template Subdirectory
-│   │       ├── index.html        # Landing / Home Page
+│   │       ├── home.html         # Main Home Page Template
+│   │       ├── index.html        # Landing / Home Index Page
+│   │       ├── students.html     # Registered Students & Courses Directory
 │   │       ├── courses.html      # Course Directory & Modals
 │   │       ├── trainers.html     # Faculty Directory & Modals
 │   │       ├── admin.html        # Admin Management Dashboard
