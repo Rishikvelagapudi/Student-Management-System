@@ -6,6 +6,16 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lms_app.settings')
+    
+    # Automatically default runserver port to config.PORT (5000) if no port is specified
+    if len(sys.argv) > 1 and sys.argv[1] == 'runserver' and len(sys.argv) == 2:
+        try:
+            import config
+            port = str(getattr(config, 'PORT', 5000))
+            sys.argv.append(port)
+        except Exception:
+            sys.argv.append('5000')
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
