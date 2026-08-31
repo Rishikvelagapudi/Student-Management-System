@@ -22,5 +22,5 @@ DATABASE_NAME = 'database.db'
 DATABASE_PATH = BASE_DIR / DATABASE_NAME
 
 # Paths & Directories
-TEMPLATES_DIR = BASE_DIR / 'templates'
-STATIC_DIR = BASE_DIR / 'static'
+TEMPLATES_DIR = BASE_DIR / 'sms_app' / 'templates'
+STATIC_DIR = BASE_DIR / 'sms_app' / 'static'
