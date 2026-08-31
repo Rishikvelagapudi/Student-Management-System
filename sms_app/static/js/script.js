@@ -483,8 +483,8 @@ function initAuth() {
       if (res.success && res.user) {
         localStorage.setItem('sms_user', JSON.stringify(res.user));
         localStorage.setItem('sms_logged_in', 'true');
-        showLoginAlert(`✅ Welcome back, ${res.user.name}! Entering app...`, 'success');
-        showToast(res.message || `Welcome back, ${res.user.name}!`, 'success');
+        showLoginAlert('✅ Welcome to SMS portal!', 'success');
+        showToast('Welcome to SMS portal!', 'success');
         setTimeout(() => {
           if (res.user.role === 'admin') {
             window.location.href = '/admin';
@@ -493,7 +493,7 @@ function initAuth() {
           }
         }, 800);
       } else {
-        const errorMsg = res.message || 'Invalid email or password. Please try again.';
+        const errorMsg = res.message || 'Wrong credentials';
         showLoginAlert(`❌ ${errorMsg}`, 'error');
         showToast(errorMsg, 'error');
       }
@@ -515,17 +515,23 @@ function initAuth() {
       const gender = document.getElementById('regGender').value;
 
       if (!name || !email || !password) {
+        showRegisterAlert('Name, Email, and Password are required fields.', 'error');
         showToast('Name, Email, and Password are required fields.', 'error');
         return;
       }
 
+      showRegisterAlert('Registering account...', 'info');
+
       const payload = { name, email, password, course, dob, gender };
       const res = await apiFetch('/api/register', 'POST', payload);
       if (res.success) {
-        showToast(res.message || 'Registration successful! You can now log in.', 'success');
-        setTimeout(() => { window.location.href = '/login'; }, 1200);
+        showRegisterAlert('✅ Successfully registered!', 'success');
+        showToast('Successfully registered!', 'success');
+        setTimeout(() => { window.location.href = '/login'; }, 1000);
       } else {
-        showToast(res.message || 'Registration failed.', 'error');
+        const errorMsg = res.message || 'Registration failed.';
+        showRegisterAlert(`❌ ${errorMsg}`, 'error');
+        showToast(errorMsg, 'error');
       }
     });
   }
@@ -533,6 +539,16 @@ function initAuth() {
 
 function showLoginAlert(msg, type) {
   const alertElem = document.getElementById('login-alert');
+  if (!alertElem) return;
+  alertElem.style.display = 'block';
+  alertElem.style.background = type === 'error' ? 'rgba(239, 68, 68, 0.12)' : type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)';
+  alertElem.style.color = type === 'error' ? '#dc2626' : type === 'success' ? '#059669' : '#2563eb';
+  alertElem.style.border = `1px solid ${type === 'error' ? 'rgba(239, 68, 68, 0.3)' : type === 'success' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`;
+  alertElem.textContent = msg;
+}
+
+function showRegisterAlert(msg, type) {
+  const alertElem = document.getElementById('register-alert');
   if (!alertElem) return;
   alertElem.style.display = 'block';
   alertElem.style.background = type === 'error' ? 'rgba(239, 68, 68, 0.12)' : type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)';

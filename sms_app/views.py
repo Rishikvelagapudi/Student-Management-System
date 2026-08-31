@@ -213,7 +213,7 @@ def api_register(request):
     return JsonResponse({
         "success": True,
         "method": "POST",
-        "message": f"Registration successful for {user_name}!",
+        "message": "Successfully registered!",
         "user": {
             "id": user.id,
             "name": user.name,
@@ -234,20 +234,17 @@ def api_login(request):
     password = data.get('password')
 
     if not email or not password:
-        return JsonResponse({"success": False, "message": "Email and password are required!"}, status=400)
+        return JsonResponse({"success": False, "message": "Wrong credentials"}, status=401)
 
     user = User.objects.filter(email__iexact=email).first()
-    if not user:
-        return JsonResponse({"success": False, "message": "User not found! Please register first."}, status=404)
-
-    if user.password != password:
-        return JsonResponse({"success": False, "message": "Invalid password!"}, status=401)
+    if not user or user.password != password:
+        return JsonResponse({"success": False, "message": "Wrong credentials"}, status=401)
 
     is_admin = (user.email.lower() == 'admin@11')
     return JsonResponse({
         "success": True,
         "method": "POST",
-        "message": f"Welcome back, {user.name}!",
+        "message": "Welcome to SMS portal!",
         "user": {
             "id": user.id,
             "name": user.name,
