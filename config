@@ -3,6 +3,7 @@
   "port": 5000,
   "host": "127.0.0.1",
   "debug": true,
+  "database_engine": "sqlite3",
   "database": "database.db",
   "templates": "templates",
   "static": "static"

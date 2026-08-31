@@ -16,7 +16,11 @@ PORT = int(os.environ.get('PORT', 5000))
 HOST = os.environ.get('HOST', '127.0.0.1')
 ALLOWED_HOSTS = ['*']
 
+# Database Configuration (SQLite3)
+DATABASE_ENGINE = 'django.db.backends.sqlite3'
+DATABASE_NAME = 'database.db'
+DATABASE_PATH = BASE_DIR / DATABASE_NAME
+
 # Paths & Directories
-DATABASE_PATH = BASE_DIR / 'database.db'
 TEMPLATES_DIR = BASE_DIR / 'templates'
 STATIC_DIR = BASE_DIR / 'static'

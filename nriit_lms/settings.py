@@ -56,8 +56,8 @@ WSGI_APPLICATION = 'nriit_lms.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'database.db',
+        'ENGINE': config.DATABASE_ENGINE,
+        'NAME': config.DATABASE_PATH,
     }
 }
 
