@@ -55,16 +55,7 @@
         <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In →</button>
       </form>
 
-      <!-- Quick Demo Credentials Selector -->
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.08); text-align: center;">
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600;">⚡ QUICK DEMO CREDENTIALS</p>
-        <div style="display: flex; gap: 0.5rem; justify-content: center;">
-          <button type="button" onclick="fillDemoStudent()" class="btn btn-outline btn-sm">Demo Student</button>
-          <button type="button" onclick="fillDemoAdmin()" class="btn btn-secondary btn-sm">Demo Admin</button>
-        </div>
-      </div>
-
-      <div style="text-align: center; margin-top: 1.25rem; color: var(--text-secondary); font-size: 0.88rem;">
+      <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.88rem;">
         New student? <a href="/register" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Register account here</a>
       </div>
     </div>
@@ -72,16 +63,5 @@
 
   <div id="toast-container"></div>
   <script src="/static/js/script.js"></script>
-
-  <script>
-    function fillDemoStudent() {
-      document.getElementById('loginEmail').value = 'rishikvelagapudi@gmail.com';
-      document.getElementById('loginPassword').value = 'Rishiktrue@11';
-    }
-    function fillDemoAdmin() {
-      document.getElementById('loginEmail').value = 'admin@11';
-      document.getElementById('loginPassword').value = '12345678';
-    }
-  </script>
 </body>
 </html>

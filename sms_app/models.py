@@ -7,6 +7,7 @@ class User(models.Model):
     course = models.CharField(max_length=255, null=True, blank=True)
     dob = models.CharField(max_length=100, null=True, blank=True)
     gender = models.CharField(max_length=50, null=True, blank=True)
+    role = models.CharField(max_length=50, default='student')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

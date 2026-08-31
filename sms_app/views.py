@@ -205,9 +205,10 @@ def api_register(request):
 
     user_name = name or "Student"
     user_course = course or "Python FullStack"
+    user_role = data.get('role', 'student')
 
     user = User.objects.create(
-        name=user_name, email=email, password=password, course=user_course, dob=dob, gender=gender
+        name=user_name, email=email, password=password, course=user_course, dob=dob, gender=gender, role=user_role
     )
 
     return JsonResponse({
@@ -220,7 +221,8 @@ def api_register(request):
             "email": user.email,
             "course": user.course,
             "dob": user.dob,
-            "gender": user.gender
+            "gender": user.gender,
+            "role": user.role
         }
     }, status=201)
 
@@ -240,7 +242,6 @@ def api_login(request):
     if not user or user.password != password:
         return JsonResponse({"success": False, "message": "Wrong credentials"}, status=401)
 
-    is_admin = (user.email.lower() == 'admin@11')
     return JsonResponse({
         "success": True,
         "method": "POST",
@@ -252,7 +253,7 @@ def api_login(request):
             "course": user.course,
             "dob": user.dob or '',
             "gender": user.gender or '',
-            "role": "admin" if is_admin else "student"
+            "role": user.role or 'student'
         }
     })
 
