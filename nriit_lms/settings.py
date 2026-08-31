@@ -69,12 +69,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'css',
-    BASE_DIR / 'js',
-    BASE_DIR / 'image',
-    BASE_DIR / 'images',
-    BASE_DIR / 'audio',
-    BASE_DIR / 'video',
+    BASE_DIR / 'static',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -37,5 +37,5 @@ urlpatterns = [
     path('api/stats', views.get_stats),
 
     # Static assets serving route
-    re_path(r'^(?P<path>(css|js|image|images|audio|video)/.*)$', serve, {'document_root': settings.BASE_DIR}),
+    re_path(r'^(?P<path>(css|js|image|images|audio|video|static)/.*)$', serve, {'document_root': settings.BASE_DIR / 'static'}),
 ]
