@@ -20,14 +20,14 @@
       </a>
       <nav>
         <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/students">Students</a></li>
+          <li><a href="/" class="active">Login</a></li>
+          <li><a href="/register">Register</a></li>
           <li><a href="/courses">Courses</a></li>
           <li><a href="/trainers">Trainers</a></li>
         </ul>
       </nav>
       <div class="nav-actions">
-        <a href="/register" class="btn btn-primary btn-sm">Register Account</a>
+        <a href="/register" class="btn btn-primary btn-sm">Create Account</a>
       </div>
     </div>
   </header>
@@ -37,28 +37,51 @@
       <div class="auth-header">
         <img src="/static/images/logo.png" alt="NRIIT Logo" class="auth-logo">
         <h2 class="page-title" style="font-size: 1.75rem;">Welcome Back</h2>
-        <p class="page-subtitle" style="font-size: 0.9rem;">Sign in to access your courses and student dashboard.</p>
+        <p class="page-subtitle" style="font-size: 0.9rem;">Sign in with your registered email and password to enter.</p>
       </div>
 
-      <form id="loginForm">
+      <!-- Inline Alert Box for Login Feedback -->
+      <div id="login-alert" class="glass-panel" style="display: none; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.88rem; border-radius: 8px;"></div>
+
+      <form id="loginForm" onsubmit="return false;">
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" id="loginEmail" class="form-input" placeholder="e.g. rishik@nriit.edu" required>
+          <input type="email" id="loginEmail" class="form-input" placeholder="e.g. rishikvelagapudi@gmail.com" required autocomplete="email">
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+          <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required autocomplete="current-password">
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In →</button>
+        <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In →</button>
       </form>
 
-      <div style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.88rem;">
-        Don't have an account? <a href="/register" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Register here</a>
+      <!-- Quick Demo Credentials Selector -->
+      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.08); text-align: center;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; font-weight: 600;">⚡ QUICK DEMO CREDENTIALS</p>
+        <div style="display: flex; gap: 0.5rem; justify-content: center;">
+          <button type="button" onclick="fillDemoStudent()" class="btn btn-outline btn-sm">Demo Student</button>
+          <button type="button" onclick="fillDemoAdmin()" class="btn btn-secondary btn-sm">Demo Admin</button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.25rem; color: var(--text-secondary); font-size: 0.88rem;">
+        New student? <a href="/register" style="color: var(--accent-cyan); font-weight: 600; text-decoration: none;">Register account here</a>
       </div>
     </div>
   </main>
 
   <div id="toast-container"></div>
   <script src="/static/js/script.js"></script>
+
+  <script>
+    function fillDemoStudent() {
+      document.getElementById('loginEmail').value = 'rishikvelagapudi@gmail.com';
+      document.getElementById('loginPassword').value = 'Rishiktrue@11';
+    }
+    function fillDemoAdmin() {
+      document.getElementById('loginEmail').value = 'admin@11';
+      document.getElementById('loginPassword').value = '12345678';
+    }
+  </script>
 </body>
 </html>

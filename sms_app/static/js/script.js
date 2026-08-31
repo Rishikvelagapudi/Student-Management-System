@@ -451,13 +451,6 @@ function initAuth() {
   if (!isLoggedIn && !isPublicPage) {
     showToast('Please sign in to access the Student Management System portal.', 'info');
     setTimeout(() => { window.location.href = '/login'; }, 800);
-    return;
-  }
-
-  // If already logged in and visiting login/root page, enter the app directly!
-  if (isLoggedIn && (currentPath === '/' || currentPath === '/login' || currentPath === '/login.html')) {
-    window.location.href = (currentUser && currentUser.role === 'admin') ? '/admin' : '/home';
-    return;
   }
 
   // Update Dynamic Navigation UI
@@ -465,34 +458,48 @@ function initAuth() {
 
   // Handle Login Form
   const loginForm = document.getElementById('loginForm');
+
   if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
+    const handleLoginSubmit = async (e) => {
+      if (e) e.preventDefault();
+      const emailElem = document.getElementById('loginEmail');
+      const passElem = document.getElementById('loginPassword');
+      if (!emailElem || !passElem) return;
+
+      const email = emailElem.value.trim();
+      const password = passElem.value;
 
       if (!email || !password) {
+        showLoginAlert('Please enter both email and password.', 'error');
         showToast('Please enter both email and password.', 'error');
         return;
       }
 
+      showLoginAlert('Authenticating credentials...', 'info');
+
       const payload = { email, password };
       const res = await apiFetch('/api/login', 'POST', payload);
+
       if (res.success && res.user) {
         localStorage.setItem('sms_user', JSON.stringify(res.user));
         localStorage.setItem('sms_logged_in', 'true');
-        showToast(res.message || `Welcome back, ${res.user.name}! Entering app...`, 'success');
+        showLoginAlert(`✅ Welcome back, ${res.user.name}! Entering app...`, 'success');
+        showToast(res.message || `Welcome back, ${res.user.name}!`, 'success');
         setTimeout(() => {
           if (res.user.role === 'admin') {
             window.location.href = '/admin';
           } else {
             window.location.href = '/home';
           }
-        }, 1000);
+        }, 800);
       } else {
-        showToast(res.message || 'Invalid email or password. Please try again.', 'error');
+        const errorMsg = res.message || 'Invalid email or password. Please try again.';
+        showLoginAlert(`❌ ${errorMsg}`, 'error');
+        showToast(errorMsg, 'error');
       }
-    });
+    };
+
+    loginForm.addEventListener('submit', handleLoginSubmit);
   }
 
   // Handle Registration Form
@@ -524,6 +531,16 @@ function initAuth() {
   }
 }
 
+function showLoginAlert(msg, type) {
+  const alertElem = document.getElementById('login-alert');
+  if (!alertElem) return;
+  alertElem.style.display = 'block';
+  alertElem.style.background = type === 'error' ? 'rgba(239, 68, 68, 0.12)' : type === 'success' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(59, 130, 246, 0.12)';
+  alertElem.style.color = type === 'error' ? '#dc2626' : type === 'success' ? '#059669' : '#2563eb';
+  alertElem.style.border = `1px solid ${type === 'error' ? 'rgba(239, 68, 68, 0.3)' : type === 'success' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(59, 130, 246, 0.3)'}`;
+  alertElem.textContent = msg;
+}
+
 function updateNavAuthUI(user, isLoggedIn) {
   const navActions = document.querySelector('.nav-actions');
   if (!navActions) return;
@@ -547,7 +564,7 @@ window.logoutUser = function() {
   localStorage.removeItem('sms_user');
   localStorage.removeItem('sms_logged_in');
   showToast('Logged out successfully.', 'info');
-  setTimeout(() => { window.location.href = '/login'; }, 800);
+  setTimeout(() => { window.location.href = '/login'; }, 600);
 };
 
 // 6. Contact Form Logic
