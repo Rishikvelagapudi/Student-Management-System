@@ -221,12 +221,3 @@ DATABASE_NAME = "database.db"
 ## 📄 License
 
 Distributed under the MIT License. See [`LICENSE`](LICENSE) for more details.
-
----
-
-<div align="center">
-
-**Developed for NRI Institute of Technology (Deemed to be University)**  
-*Crafted with ❤️ using Django & Modern Web Standards*
-
-</div>
