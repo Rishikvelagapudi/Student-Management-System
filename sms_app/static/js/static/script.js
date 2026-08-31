@@ -456,86 +456,99 @@ function initAuth() {
   // Update Dynamic Navigation UI
   updateNavAuthUI(currentUser, isLoggedIn);
 
-  // Handle Login Form
+  // Bind form submission listeners
   const loginForm = document.getElementById('loginForm');
-
   if (loginForm) {
-    const handleLoginSubmit = async (e) => {
-      if (e) e.preventDefault();
-      const emailElem = document.getElementById('loginEmail');
-      const passElem = document.getElementById('loginPassword');
-      if (!emailElem || !passElem) return;
-
-      const email = emailElem.value.trim();
-      const password = passElem.value;
-
-      if (!email || !password) {
-        showLoginAlert('Please enter both email and password.', 'error');
-        showToast('Please enter both email and password.', 'error');
-        return;
-      }
-
-      showLoginAlert('Authenticating credentials...', 'info');
-
-      const payload = { email, password };
-      const res = await apiFetch('/api/login', 'POST', payload);
-
-      if (res.success && res.user) {
-        localStorage.setItem('sms_user', JSON.stringify(res.user));
-        localStorage.setItem('sms_logged_in', 'true');
-        showLoginAlert('✅ Welcome to SMS portal!', 'success');
-        showToast('Welcome to SMS portal!', 'success');
-        setTimeout(() => {
-          if (res.user.role === 'admin') {
-            window.location.href = '/admin';
-          } else {
-            window.location.href = '/home';
-          }
-        }, 800);
-      } else {
-        const errorMsg = res.message || 'Wrong credentials';
-        showLoginAlert(`❌ ${errorMsg}`, 'error');
-        showToast(errorMsg, 'error');
-      }
-    };
-
-    loginForm.addEventListener('submit', handleLoginSubmit);
+    loginForm.addEventListener('submit', (e) => window.submitLogin(e));
   }
 
-  // Handle Registration Form
   const registerForm = document.getElementById('registerForm');
   if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value;
-      const course = document.getElementById('regCourse').value;
-      const dob = document.getElementById('regDob').value;
-      const gender = document.getElementById('regGender').value;
-
-      if (!name || !email || !password) {
-        showRegisterAlert('Name, Email, and Password are required fields.', 'error');
-        showToast('Name, Email, and Password are required fields.', 'error');
-        return;
-      }
-
-      showRegisterAlert('Registering account...', 'info');
-
-      const payload = { name, email, password, course, dob, gender };
-      const res = await apiFetch('/api/register', 'POST', payload);
-      if (res.success) {
-        showRegisterAlert('✅ Successfully registered!', 'success');
-        showToast('Successfully registered!', 'success');
-        setTimeout(() => { window.location.href = '/login'; }, 1000);
-      } else {
-        const errorMsg = res.message || 'Registration failed.';
-        showRegisterAlert(`❌ ${errorMsg}`, 'error');
-        showToast(errorMsg, 'error');
-      }
-    });
+    registerForm.addEventListener('submit', (e) => window.submitRegister(e));
   }
 }
+
+window.submitLogin = async function(e) {
+  if (e) {
+    e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
+  const emailElem = document.getElementById('loginEmail');
+  const passElem = document.getElementById('loginPassword');
+  if (!emailElem || !passElem) return;
+
+  const email = emailElem.value.trim();
+  const password = passElem.value;
+
+  if (!email || !password) {
+    showLoginAlert('Please enter both email and password.', 'error');
+    showToast('Please enter both email and password.', 'error');
+    return;
+  }
+
+  showLoginAlert('Authenticating credentials...', 'info');
+
+  const payload = { email, password };
+  const res = await apiFetch('/api/login', 'POST', payload);
+
+  if (res.success && res.user) {
+    localStorage.setItem('sms_user', JSON.stringify(res.user));
+    localStorage.setItem('sms_logged_in', 'true');
+    showLoginAlert('✅ Welcome to SMS portal!', 'success');
+    showToast('Welcome to SMS portal!', 'success');
+    setTimeout(() => {
+      if (res.user.role === 'admin') {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/home';
+      }
+    }, 800);
+  } else {
+    const errorMsg = res.message || 'Wrong credentials';
+    showLoginAlert(`❌ ${errorMsg}`, 'error');
+    showToast(errorMsg, 'error');
+  }
+};
+
+window.submitRegister = async function(e) {
+  if (e) {
+    e.preventDefault();
+    if (e.stopPropagation) e.stopPropagation();
+  }
+
+  const nameElem = document.getElementById('regName');
+  const emailElem = document.getElementById('regEmail');
+  const passElem = document.getElementById('regPassword');
+  if (!nameElem || !emailElem || !passElem) return;
+
+  const name = nameElem.value.trim();
+  const email = emailElem.value.trim();
+  const password = passElem.value;
+  const course = document.getElementById('regCourse') ? document.getElementById('regCourse').value : 'Python FullStack';
+  const dob = document.getElementById('regDob') ? document.getElementById('regDob').value : '';
+  const gender = document.getElementById('regGender') ? document.getElementById('regGender').value : 'Male';
+
+  if (!name || !email || !password) {
+    showRegisterAlert('Name, Email, and Password are required fields.', 'error');
+    showToast('Name, Email, and Password are required fields.', 'error');
+    return;
+  }
+
+  showRegisterAlert('Registering account...', 'info');
+
+  const payload = { name, email, password, course, dob, gender };
+  const res = await apiFetch('/api/register', 'POST', payload);
+  if (res.success) {
+    showRegisterAlert('✅ Successfully registered!', 'success');
+    showToast('Successfully registered!', 'success');
+    setTimeout(() => { window.location.href = '/login'; }, 1000);
+  } else {
+    const errorMsg = res.message || 'Registration failed.';
+    showRegisterAlert(`❌ ${errorMsg}`, 'error');
+    showToast(errorMsg, 'error');
+  }
+};
 
 function showLoginAlert(msg, type) {
   const alertElem = document.getElementById('login-alert');
